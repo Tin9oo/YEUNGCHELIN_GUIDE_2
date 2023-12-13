@@ -6,21 +6,17 @@ export default function Comp_filtered_item({ selRest }) {
   const [expanded, setExpanded] = useState(false);
   const [restInfo, setRestInfo] = useState([]);
 
-  const handleChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
-
   useEffect(() => {
     fetch("/api/restaurants")
       .then((response) => response.json())
       .then((data) => setRestInfo(data))
       .catch((error) => console.log(error));
-  });
+  }, []);
 
   return (
     <div>
       {restInfo.map((rest, index) => (
-        <Card sx={{ maxWidth: 275, margin: 2 }}>
+        <Card key={rest.idrestaurant} sx={{ maxWidth: 275, margin: 2 }}>
           <CardActionArea>
             {/* <CardMedia
               component="img"
@@ -29,6 +25,9 @@ export default function Comp_filtered_item({ selRest }) {
               alt="green iguana"
             /> */}
             <CardContent>
+              {/* {Object.entries(rest).map(([key, value]) => (
+                <div>{key}: {value}</div>
+              ))} */}
               <Typography gutterBottom variant="h5" component="div">
                 {rest.name}
               </Typography>
