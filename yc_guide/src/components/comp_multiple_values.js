@@ -1,17 +1,16 @@
-import * as React from 'react';
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
+import React, { useState, useEffect } from "react";
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
 
-export default function Comp_multiple_values() {
-  const [restName, setRestName] = React.useState([]);
-  const [selValue, setSelValue] = React.useState([]);
-  
-  React.useEffect(() => {
-    fetch('/api/restInfo')
-      .then(response => response.json())
-      .then(data => setRestName(data))
-      .catch(error => console.log('Error fetching data: ', error));
+export default function Comp_multiple_values({ onValueChange }) {
+  const [restName, setRestName] = useState([]);
+
+  useEffect(() => {
+    fetch("/api/restaurants/names")
+      .then((response) => response.json())
+      .then((data) => setRestName(data))
+      .catch((error) => console.log("Error fetching data: ", error));
   }, []);
 
   return (
@@ -19,8 +18,7 @@ export default function Comp_multiple_values() {
       display="flex"
       justifyContent="center"
       alignItems="flex-start"
-      // minHeight="100vh"
-      sx={{ height: '100vh', paddingTop: '10%'}}
+      sx={{ height: "auto", paddingTop: "5%", paddingBottom: "5%" }}
     >
       <Autocomplete
         multiple
@@ -28,7 +26,7 @@ export default function Comp_multiple_values() {
         options={restName}
         getOptionLabel={(option) => option.name}
         onChange={(event, newValue) => {
-          setSelValue(newValue);
+          onValueChange(newValue);
         }}
         renderInput={(params) => (
           <TextField

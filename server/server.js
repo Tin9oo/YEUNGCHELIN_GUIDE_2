@@ -14,8 +14,30 @@ connection.connect(error => {
     console.log('Successfully connected to the database.');
 })
 
-app.get('/api/restInfo', (req, res) => {
+app.get('/api/restaurants', (req, res) => {
     let sql = 'SELECT * FROM restaurant';
+    connection.query(
+        sql,
+        (error, results, fields) => {
+            if (error) throw error;
+            res.json(results);
+        }
+    );
+});
+
+app.get('/api/restaurants/names', (req, res) => {
+    let sql = 'SELECT name  FROM restaurant';
+    connection.query(
+        sql,
+        (error, results, fields) => {
+            if (error) throw error;
+            res.json(results);
+        }
+    );
+});
+
+app.get('/api/restaurants/search', (req, res) => {
+    let sql = 'SELECT';
     connection.query(
         sql,
         (error, results, fields) => {
