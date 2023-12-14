@@ -2,6 +2,7 @@
 
 # database
 /database.json
+/DataBase/authen.sql
 
 # dependencies
 /node_modules
