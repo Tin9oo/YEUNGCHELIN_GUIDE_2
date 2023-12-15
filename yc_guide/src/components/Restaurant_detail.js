@@ -1,4 +1,4 @@
-//작성일: 23/12/13
+//작성일: 2023/12/13
 //목적  : 가게 상세 팝업 구현
 
 import * as React from 'react';
@@ -19,8 +19,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-
-export default function Restaurant_detail_Popup(props) {
+export default function RestaurantDetailPopup(props) {
     const [open, setOpen] = React.useState(false);
     const handleClickOpen = () => {
         setOpen(true);
@@ -29,13 +28,15 @@ export default function Restaurant_detail_Popup(props) {
         setOpen(false);
     };
 
-    let [Restaurant_detail, b] = React.useState([])
-
     return (
         <React.Fragment>
+
+            {/* Button on main page */}
             <Button variant="outlined" onClick={handleClickOpen}>
                 Restaurant detail
             </Button>
+
+            {/* Dialog that will shown when click the button */}
             <Dialog
                 fullScreen
                 open={open}
@@ -44,6 +45,7 @@ export default function Restaurant_detail_Popup(props) {
             >
                 <AppBar sx={{ position: 'relative' }}>
                     <Toolbar>
+                        {/* Close Button */}
                         <IconButton
                             edge="start"
                             color="inherit"
@@ -52,8 +54,9 @@ export default function Restaurant_detail_Popup(props) {
                         >
                             <CloseIcon />
                         </IconButton>
+                        {/* Contents that will shown on AppBar */}
                         <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-                        Restaurant detail
+                            Restaurant detail
                         </Typography>
                         <Button autoFocus color="inherit" onClick={handleClose}>
                             Edit
@@ -61,47 +64,38 @@ export default function Restaurant_detail_Popup(props) {
                     </Toolbar>
                 </AppBar>
 
+                {/* the Things that have to shown on Restaurant_Detail Page */}
                 <List>
-                    <ListItem button>
-                        <ListItemText primary="name" secondary="category1" />
-                    </ListItem>
-                    <Divider />
-                    <ListItem button>
+                    <ListItem>
                         <ListItemText
-                            primary="Default notification ringtone"
-                            secondary="Tethys"
+                            primary={props.name}
+                            secondary={`${props.category1}/${props.category2}`} />
+                    </ListItem>
+                    <ListItem>
+                        <ListItemText
+                            primary={`
+                                가게평점: ${props.star_score} / 
+                                시그니처메뉴: ${props.signature_menu} / 
+                                동서남북: ${props.Coarse_location} / 
+                                전화번호: ${props.telnum} / 
+                                실제주소: ${props.Real_location} \n
+                                운영시간: ${props.operation_hour} / 
+                                휴식시간: ${props.breakingtime}`}
                         />
                     </ListItem>
+                    <Divider />
+                    <ListItem>
+                        <ListItemText primary="메뉴" />
+                    </ListItem>
+                    {/* 메뉴 정보를 map으로 순회하여 각 아이템 렌더링 */}
+                    {props.menuList && props.menuList.map((menu, index) => (
+                        <ListItem key={index}>
+                            <ListItemText primary={menu} />
+                        </ListItem>
+                    ))}
                 </List>
-            </Dialog>
 
+            </Dialog>
         </React.Fragment>
     );
-}
-
-
-class Restaurant_detail_Popup extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            idRestaurant: '',
-            name: '',
-            category1: '',
-            category2: '',
-            telnum: '',
-            Coarse_location: '',
-            Real_location: '',
-            redirect_address: '',
-            operation_hour: '',
-            breakingtime: '',
-            star_score: '',
-            signature_menu: '',
-            update_date: '',
-            open: false
-        }
-    }
-
-    handleClickOpen = () => { this.setState({ open: true }); } //해당 페이지가 열렸는가 확인/
-    handleClose = () => { this.setState({ open: false }); } //닫기
 }
