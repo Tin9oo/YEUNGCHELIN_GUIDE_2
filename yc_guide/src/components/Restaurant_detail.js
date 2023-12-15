@@ -25,33 +25,30 @@ export default function RestaurantDetailPopup(props) {
 
 
     const [restInfo, setRestInfo] = useState([]);
-    const [menuInfo, setmenuInfo] = useState([]);
+    const [menuInfo, setMenuInfo] = useState([]);
 
     useEffect(() => {
         fetch("/api/restaurants/detail/:id")
             .then((response) => response.json())
-            .then((data) => setRestNmenuInfo(data))
+            .then((data) => setRestInfo(data))
             .catch((error) => console.log("Error fetching data: ", error));
         console.log('Fetch is completed!');
-        console.log(restNmenuInfo);
+        console.log(restInfo);
 
         fetch("/api/restaurants/detail/:id/menu")
             .then((response) => response.json())
-            .then((data) => setRestNmenuInfo(data))
+            .then((data) => setMenuInfo(data))
             .catch((error) => console.log("Error fetching data: ", error));
         console.log('Fetch is completed!');
-        console.log(restNmenuInfo);
+        console.log(menuInfo);
     }, []);
-
-
-
 
     const handleClickOpen = () => {
         setOpen(true);
     };
     const handleClose = () => {
         setOpen(false);
-    }; f
+    };
 
     return (
         <React.Fragment>
@@ -94,28 +91,29 @@ export default function RestaurantDetailPopup(props) {
                     <ListItem>
                         <ListItemText
                             primary={restInfo.name}
-                            secondary={`${props.category1}/${props.category2}`} />
+                            secondary={`${restInfo.category1}/${restInfo.category2}`} />
                     </ListItem>
                     <ListItem>
                         <ListItemText
                             primary={`
-                                가게평점: ${props.star_score} / 
-                                시그니처메뉴: ${props.signature_menu} / 
-                                동서남북: ${props.Coarse_location} / 
-                                전화번호: ${props.telnum} / 
-                                실제주소: ${props.Real_location} \n
-                                운영시간: ${props.operation_hour} / 
-                                휴식시간: ${props.breakingtime}`}
+                                가게평점: ${restInfo.star_score} / 
+                                시그니처메뉴: ${restInfo.signature_menu} / 
+                                동서남북: ${restInfo.Coarse_location} / 
+                                전화번호: ${restInfo.telnum} / 
+                                실제주소: ${restInfo.Real_location} \n
+                                운영시간: ${restInfo.operation_hour} / 
+                                휴식시간: ${restInfo.breakingtime}`}
                         />
                     </ListItem>
                     <Divider />
                     <ListItem>
                         <ListItemText primary="메뉴" />
                     </ListItem>
-                    {/* 메뉴 정보를 map으로 순회하여 각 아이템 렌더링 */}
-                    {props.menuList && props.menuList.map((menu, index) => (
+                    {/* 메뉴 정보를 map으로 순회하여 각 아이템 렌더링 menuInfo는 하나의 테이블, name은 한 행(한 튜플)*/}
+                    {menuInfo.map((menu, index) => (
                         <ListItem key={index}>
-                            <ListItemText primary={menu} />
+                            <ListItemText primary={menu.name} />
+                            <ListItemText primary={menu.price} />
                         </ListItem>
                     ))}
                 </List>
