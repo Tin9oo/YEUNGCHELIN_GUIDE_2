@@ -21,12 +21,37 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function RestaurantDetailPopup(props) {
     const [open, setOpen] = React.useState(false);
+
+
+
+    const [restInfo, setRestInfo] = useState([]);
+    const [menuInfo, setmenuInfo] = useState([]);
+
+    useEffect(() => {
+        fetch("/api/restaurants/detail/:id")
+            .then((response) => response.json())
+            .then((data) => setRestNmenuInfo(data))
+            .catch((error) => console.log("Error fetching data: ", error));
+        console.log('Fetch is completed!');
+        console.log(restNmenuInfo);
+
+        fetch("/api/restaurants/detail/:id/menu")
+            .then((response) => response.json())
+            .then((data) => setRestNmenuInfo(data))
+            .catch((error) => console.log("Error fetching data: ", error));
+        console.log('Fetch is completed!');
+        console.log(restNmenuInfo);
+    }, []);
+
+
+
+
     const handleClickOpen = () => {
         setOpen(true);
     };
     const handleClose = () => {
         setOpen(false);
-    };
+    }; f
 
     return (
         <React.Fragment>
@@ -68,7 +93,7 @@ export default function RestaurantDetailPopup(props) {
                 <List>
                     <ListItem>
                         <ListItemText
-                            primary={props.name}
+                            primary={restInfo.name}
                             secondary={`${props.category1}/${props.category2}`} />
                     </ListItem>
                     <ListItem>
@@ -94,7 +119,6 @@ export default function RestaurantDetailPopup(props) {
                         </ListItem>
                     ))}
                 </List>
-
             </Dialog>
         </React.Fragment>
     );
