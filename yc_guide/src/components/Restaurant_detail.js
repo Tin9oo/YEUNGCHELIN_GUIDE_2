@@ -22,8 +22,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function RestaurantDetailPopup(props) {
     const [open, setOpen] = React.useState(false);
 
-
-
     const [restInfo, setRestInfo] = useState([]);
     const [menuInfo, setMenuInfo] = useState([]);
 
