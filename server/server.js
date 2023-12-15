@@ -62,6 +62,7 @@ app.post('/api/restaurants/search', (req, res) => {
 {/* 이때 해당 가게 id 어케 받음? */}
 app.get('/api/restaurants/:id', (req, res) => {
     const restaurantId = req.params.id;
+    console.log("restaurantId: ", restaurantId);
     let sql = 'SELECT * FROM restaurant WHERE idrestaurant = ?';
     connection.query(sql, restaurant_id,
         (error, results, fields) => {

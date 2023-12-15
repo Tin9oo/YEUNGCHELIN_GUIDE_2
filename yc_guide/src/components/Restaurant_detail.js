@@ -1,7 +1,7 @@
 //작성일: 2023/12/13
 //목적  : 가게 상세 팝업 구현
 
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import ListItemText from '@mui/material/ListItemText';
@@ -28,14 +28,14 @@ export default function RestaurantDetailPopup(props) {
     const [menuInfo, setMenuInfo] = useState([]);
 
     useEffect(() => {
-        fetch("/api/restaurants/detail/:id")
+        fetch(`/api/restaurants/detail/${0}`)
             .then((response) => response.json())
             .then((data) => setRestInfo(data))
             .catch((error) => console.log("Error fetching data: ", error));
         console.log('Fetch is completed!');
         console.log(restInfo);
 
-        fetch("/api/restaurants/detail/:id/menu")
+        fetch(`/api/restaurants/detail/${0}/menu`)
             .then((response) => response.json())
             .then((data) => setMenuInfo(data))
             .catch((error) => console.log("Error fetching data: ", error));

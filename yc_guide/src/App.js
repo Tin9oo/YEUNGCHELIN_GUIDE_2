@@ -9,8 +9,8 @@ function App() {
 
   return (
     <div className="App">
-      <Comp_multiple_values onValueChange={setSelRest}/>
-      <Comp_filtered_item selRest={selRest}/>
+      {/* <Comp_multiple_values onValueChange={setSelRest}/>
+      <Comp_filtered_item selRest={selRest}/> */}
       <RestaurantDetailPopup/>
     </div>
   );
