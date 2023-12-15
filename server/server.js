@@ -64,7 +64,7 @@ app.get('/api/restaurants/:id', (req, res) => {
     const restaurantId = req.params.id;
     console.log("restaurantId: ", restaurantId);
     let sql = 'SELECT * FROM restaurant WHERE idrestaurant = ?';
-    connection.query(sql, restaurant_id,
+    connection.query(sql, restaurantId,
         (error, results, fields) => {
             if (error) throw error;
             res.json(results);
@@ -74,7 +74,7 @@ app.get('/api/restaurants/:id', (req, res) => {
 app.get('/api/restaurants/:id/menu', (req, res) => {
     const restaurantId = req.params.id;
     let sql = 'SELECT * FROM menu WHERE restaurant_idrestaurant = ?';
-    connection.query(sql, restaurant_id,
+    connection.query(sql, restaurantId,
         (error, results, fields) => {
             if (error) throw error;
             res.json(results);
