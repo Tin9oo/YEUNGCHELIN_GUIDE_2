@@ -4,6 +4,8 @@ const fs = require('fs');
 const app = express();
 const port = process.env.PORT || 8080;
 
+app.use(express.json());
+
 const db_info = fs.readFileSync('../database.json');
 const db_conf = JSON.parse(db_info);
 
@@ -36,13 +38,21 @@ app.get('/api/restaurants/names', (req, res) => {
     );
 });
 
-app.get('/api/restaurants/search', (req, res) => {
-    let sql = 'SELECT';
+app.post('/api/restaurants/search', (req, res) => {
+    const restNames = req.body;
+    console.log(restNames);
+
+    let sql = 'SELECT * FROM restaurant WHERE name IN (?)';
     connection.query(
-        sql,
+        sql, [restNames],
         (error, results, fields) => {
-            if (error) throw error;
-            res.json(results);
+            if (error) {
+                return res.status(500).send('Server Error');
+            } else {
+                console.log(results);
+                res.json(results);
+                console.log('GET /api/restaurant/search is completed!');
+            }
         }
     );
 });

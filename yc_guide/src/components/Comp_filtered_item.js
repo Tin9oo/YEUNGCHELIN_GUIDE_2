@@ -3,15 +3,41 @@ import { Card, CardContent, CardMedia, Typography } from "@mui/material";
 import { Button, CardActionArea, CardActions } from "@mui/material";
 
 export default function Comp_filtered_item({ selRest }) {
-  const [expanded, setExpanded] = useState(false);
   const [restInfo, setRestInfo] = useState([]);
 
   useEffect(() => {
-    fetch("/api/restaurants")
-      .then((response) => response.json())
-      .then((data) => setRestInfo(data))
-      .catch((error) => console.log(error));
-  }, []);
+    console.log('Length of selRest: ', selRest.length);
+    console.log('selRest\n');
+    console.log(selRest);
+    if (selRest.length > 0) {
+      filteredRest(selRest.map(rest => rest.name));
+    }
+    else if (selRest.length === 0) {
+      allRest();
+    }
+  }, [selRest]);
+
+  const allRest = () => {
+    fetch('api/restaurants')
+      .then(response => response.json())
+      .then(data => setRestInfo(data))
+      .catch(error => console.error('Error fetching data:', error));
+  }
+
+  const filteredRest = (restNames) => {
+    console.log(restNames);
+    fetch(`api/restaurants/search`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(restNames)
+    })
+      .then(response => response.json())
+      .then(data => setRestInfo(data))
+      .catch(error => console.error('Error fetching data:', error));
+    console.log('Function filtered_Rest is completed!');
+  }
 
   return (
     <div>

@@ -11,6 +11,8 @@ export default function Comp_multiple_values({ onValueChange }) {
       .then((response) => response.json())
       .then((data) => setRestName(data))
       .catch((error) => console.log("Error fetching data: ", error));
+      console.log('Fetch is completed!');
+      console.log(restName);
   }, []);
 
   return (
