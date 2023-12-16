@@ -7,13 +7,13 @@ export default function Comp_filtered_item({ selRest }) {
 
   useEffect(() => {
     console.log('Length of selRest: ', selRest.length);
-    console.log('selRest\n');
-    console.log(selRest);
-    if (selRest.length > 0) {
-      filteredRest(selRest.map(rest => rest.name));
-    }
-    else if (selRest.length === 0) {
+    console.log('selRest: ', selRest);
+    
+    if (selRest.name.length === 0 && selRest.category1.length === 0 && selRest.coarse_location.length === 0) {
       allRest();
+    }
+    else {
+      filteredRest();
     }
   }, [selRest]);
 
@@ -24,14 +24,19 @@ export default function Comp_filtered_item({ selRest }) {
       .catch(error => console.error('Error fetching data:', error));
   }
 
-  const filteredRest = (restNames) => {
-    console.log(restNames);
+  const filteredRest = () => {
+    const restInfoTmp = {
+      name: selRest.name,
+      category1: selRest.category1,
+      coarse_location: selRest.coarse_location
+    };
+
     fetch(`api/restaurants/search`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(restNames)
+      body: JSON.stringify(restInfoTmp)
     })
       .then(response => response.json())
       .then(data => setRestInfo(data))
