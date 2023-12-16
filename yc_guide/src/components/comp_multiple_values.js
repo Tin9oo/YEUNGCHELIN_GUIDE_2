@@ -1,25 +1,45 @@
 import React, { useState, useEffect } from "react";
+import { Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
 export default function Comp_multiple_values({ onValueChange }) {
   const [restName, setRestName] = useState([]);
+  const [restCat, setRestCat] = useState([]);
+  const [restLoc, setRestLoc] = useState([]);
+
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
-    fetch("/api/restaurants/names")
+    fetch("/api/restaurants/name")
       .then((response) => response.json())
       .then((data) => setRestName(data))
       .catch((error) => console.log("Error fetching data: ", error));
-      console.log('Fetch is completed!');
-      console.log(restName);
+
+    fetch("/api/restaurants/category1")
+      .then((response) => response.json())
+      .then((data) => setRestCat(data))
+      .catch((error) => console.log("Error fetching data: ", error));
+
+    fetch("/api/restaurants/coarse_location")
+      .then((response) => response.json())
+      .then((data) => setRestLoc(data))
+      .catch((error) => console.log("Error fetching data: ", error));
   }, []);
+
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
 
   return (
     <Box
       display="flex"
+      flexDirection="column"
       justifyContent="center"
-      alignItems="flex-start"
+      alignItems="center"
       sx={{ height: "auto", paddingTop: "5%", paddingBottom: "5%" }}
     >
       <Autocomplete
@@ -28,18 +48,70 @@ export default function Comp_multiple_values({ onValueChange }) {
         options={restName}
         getOptionLabel={(option) => option.name}
         onChange={(event, newValue) => {
-          onValueChange(newValue);
+          onValueChange('name', newValue.map(item => item.name));
         }}
         renderInput={(params) => (
           <TextField
             {...params}
             variant="standard"
             label="상호명"
-            placeholder="Favorites"
+            placeholder="입력하세요"
           />
         )}
-        style={{ width: 500 }}
+        style={{ width: 500, marginBottom: "20px" }}
       />
+      <Accordion
+        expanded={expanded === true}
+        onChange={handleChange(true)}
+      >
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1bh-content"
+          id="panel1bh-header"
+        >
+          <Typography sx={{ width: '33%', flexShrink: 0 }}>
+            고급 검색
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Autocomplete
+            multiple
+            id="tags-standard"
+            options={restCat}
+            getOptionLabel={(option) => option.category1}
+            onChange={(event, newValue) => {
+              onValueChange('category1', newValue.map(item => item.category1));
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                variant="standard"
+                label="카테고리"
+                placeholder="입력하세요"
+              />
+            )}
+            style={{ width: 500 }}
+          />
+          <Autocomplete
+            multiple
+            id="tags-standard"
+            options={restLoc}
+            getOptionLabel={(option) => option.Coarse_location}
+            onChange={(event, newValue) => {
+              onValueChange('coarse_location', newValue.map(item => item.Coarse_location));
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                variant="standard"
+                label="위치"
+                placeholder="입력하세요"
+              />
+            )}
+            style={{ width: 500 }}
+          />
+        </AccordionDetails>
+      </Accordion>
     </Box>
   );
 }
