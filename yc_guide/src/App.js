@@ -5,6 +5,7 @@ import Comp_filtered_item from './components/Comp_filtered_item';
 import Comp_addRestaurant from './components/Comp_addRestaurant';
 
 function App() {
+  const [refresh, setRefresh] = useState(false); // 0과 1을 번갈아가며 사용
   const [selRest, setSelRest] = useState({
     name: [],
     category1: [],
@@ -25,9 +26,9 @@ function App() {
 
   return (
     <div className="App">
-      <Comp_multiple_values onValueChange={handleSelRest}/>
-      <Comp_addRestaurant/>
-      <Comp_filtered_item selRest={selRest}/>
+      <Comp_multiple_values onValueChange={handleSelRest} refresh={refresh} setRefresh={setRefresh}/>
+      <Comp_addRestaurant refresh={refresh} setRefresh={setRefresh}/>
+      <Comp_filtered_item selRest={selRest} refresh={refresh} setRefresh={setRefresh}/>
     </div>
   );
 }

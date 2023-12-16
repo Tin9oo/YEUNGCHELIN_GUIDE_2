@@ -7,7 +7,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
-export default function Comp_addRestaurant() {
+export default function Comp_addRestaurant({ refresh, setRefresh }) {
   const [open, setOpen] = React.useState(false);
   const [restInput, setRestInput] = React.useState({
     name: "",
@@ -20,12 +20,15 @@ export default function Comp_addRestaurant() {
     opHourEnd: "22:00",
     bkTimeStart: "15:00",
     bkTimeEnd: "17:00",
-    star_score: 0
+    star_score: 0,
   });
 
   React.useEffect(() => {
     console.log(restInput);
   }, [restInput]);
+  React.useEffect(() => {
+    console.log('refresh:', refresh);
+  }, [refresh]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -38,31 +41,30 @@ export default function Comp_addRestaurant() {
   const handleChange = (e) => {
     setRestInput({
       ...restInput,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
     console.log(`[${e.target.name}]: ${e.target.value}`);
   };
 
   const handleSubmit = async () => {
     try {
-        console.log(restInput);
-        const response = await fetch('/api/restaurants', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(restInput)
-        });
-        if (response.ok) {
-            console.log('가게 추가 완료');
-            handleClose();
-        }
-        else {
-            console.log('가게 추가 실패');
-        }
-    }
-    catch (error) {
-        console.error('서버 오류:', error);
+      console.log(restInput);
+      const response = await fetch("/api/restaurants", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(restInput),
+      });
+      if (response.ok) {
+        console.log("가게 추가 완료");
+        setRefresh(!refresh);
+        handleClose();
+      } else {
+        console.log("가게 추가 실패");
+      }
+    } catch (error) {
+      console.error("서버 오류:", error);
     }
   };
 
@@ -144,10 +146,10 @@ export default function Comp_addRestaurant() {
             type="time"
             defaultValue="09:00"
             InputLabelProps={{
-                shrink: true
+              shrink: true,
             }}
             inputProps={{
-                step: 300
+              step: 300,
             }}
             fullWidth
             variant="standard"
@@ -161,10 +163,10 @@ export default function Comp_addRestaurant() {
             type="time"
             defaultValue="22:00"
             InputLabelProps={{
-                shrink: true
+              shrink: true,
             }}
             inputProps={{
-                step: 300
+              step: 300,
             }}
             fullWidth
             variant="standard"
@@ -178,10 +180,10 @@ export default function Comp_addRestaurant() {
             type="time"
             defaultValue="15:00"
             InputLabelProps={{
-                shrink: true
+              shrink: true,
             }}
             inputProps={{
-                step: 300
+              step: 300,
             }}
             fullWidth
             variant="standard"
@@ -195,10 +197,10 @@ export default function Comp_addRestaurant() {
             type="time"
             defaultValue="17:00"
             InputLabelProps={{
-                shrink: true
+              shrink: true,
             }}
             inputProps={{
-                step: 300
+              step: 300,
             }}
             fullWidth
             variant="standard"
