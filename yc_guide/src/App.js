@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import Comp_multiple_values from './components/Comp_multiple_values';
 import Comp_filtered_item from './components/Comp_filtered_item';
+import Comp_addRestaurant from './components/Comp_addRestaurant';
 
 function App() {
   const [selRest, setSelRest] = useState({
@@ -25,6 +26,7 @@ function App() {
   return (
     <div className="App">
       <Comp_multiple_values onValueChange={handleSelRest}/>
+      <Comp_addRestaurant/>
       <Comp_filtered_item selRest={selRest}/>
     </div>
   );
