@@ -1,7 +1,7 @@
 //작성일: 2023/12/13
 //목적  : 가게 상세 팝업 구현
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import ListItemText from '@mui/material/ListItemText';
@@ -20,26 +20,24 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function RestaurantDetailPopup(props) {
-    const [open, setOpen] = React.useState(false);
 
+    console.log('RestaurantDetailPopup 컴포넌트 로딩됨');
+
+    const [open, setOpen] = React.useState(false);
     const [restInfo, setRestInfo] = useState([]);
     const [menuInfo, setMenuInfo] = useState([]);
 
     useEffect(() => {
-        fetch(`/api/restaurants/detail/${props}`)
-            .then((response) => response.json())
-            .then((data) => setRestInfo(data))
-            .catch((error) => console.log("Error fetching data: ", error));
-        console.log('Fetch is completed!');
-        console.log(restInfo);
-
-        fetch(`/api/restaurants/detail/${props}/menu`)
-            .then((response) => response.json())
-            .then((data) => setMenuInfo(data))
-            .catch((error) => console.log("Error fetching data: ", error));
-        console.log('Fetch is completed!');
-        console.log(menuInfo);
-    }, []);
+        fetch("/api/restaurants/:0")
+          .then((response) => response.json())
+          .then((data) => setRestInfo(data))
+          .catch((error) => console.log("Error fetching data: ", error));
+    
+        fetch("/api/restaurants/:0/menu")
+          .then((response) => response.json())
+          .then((data) => setMenuInfo(data))
+          .catch((error) => console.log("Error fetching data: ", error));
+      }, []);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -50,13 +48,10 @@ export default function RestaurantDetailPopup(props) {
 
     return (
         <React.Fragment>
-
-            {/* Button on main page */}
             <Button variant="contained" onClick={handleClickOpen}>
                 Restaurant detail
             </Button>
 
-            {/* Dialog that will shown when click the button */}
             <Dialog
                 fullScreen
                 open={open}
@@ -65,7 +60,6 @@ export default function RestaurantDetailPopup(props) {
             >
                 <AppBar sx={{ position: 'relative' }}>
                     <Toolbar>
-                        {/* Close Button */}
                         <IconButton
                             edge="start"
                             color="inherit"
@@ -74,7 +68,6 @@ export default function RestaurantDetailPopup(props) {
                         >
                             <CloseIcon />
                         </IconButton>
-                        {/* Contents that will shown on AppBar */}
                         <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
                             Restaurant detail
                         </Typography>
@@ -84,7 +77,6 @@ export default function RestaurantDetailPopup(props) {
                     </Toolbar>
                 </AppBar>
 
-                {/* the Things that have to shown on Restaurant_Detail Page */}
                 <List>
                     <ListItem>
                         <ListItemText
@@ -107,7 +99,6 @@ export default function RestaurantDetailPopup(props) {
                     <ListItem>
                         <ListItemText primary="메뉴" />
                     </ListItem>
-                    {/* 메뉴 정보를 map으로 순회하여 각 아이템 렌더링 */}
                     {menuInfo.menuList && menuInfo.menuList.map((menu, index) => (
                         <ListItem key={index}>
                             <ListItemText primary={menu.name} />

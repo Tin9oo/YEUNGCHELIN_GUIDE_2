@@ -26,7 +26,7 @@ function App() {
   return (
     <div className="App">
       <Comp_multiple_values onValueChange={handleSelRest}/>
-      <RestaurantDetailPopup props={1}/>
+      <RestaurantDetailPopup props={0} />
       <Comp_filtered_item selRest={selRest}/>
     </div>
   );

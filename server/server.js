@@ -102,26 +102,34 @@ app.post('/api/restaurants/search', (req, res) => {
     );
 });
 
-{/* 요청한 가게 id를 받아서 해당되는 가게정보/메뉴만 따로 끌어와야한다. */}
-{/* 이때 해당 가게 id 어케 받음? */}
 app.get('/api/restaurants/:id', (req, res) => {
     const restaurantId = req.params.id;
-    console.log("restaurantId: ", restaurantId);
+    console.log("restaurantId1 ", restaurantId);
     let sql = 'SELECT * FROM restaurant WHERE idrestaurant = ?';
     connection.query(sql, restaurantId,
         (error, results, fields) => {
             if (error) throw error;
+            else {
+                console.log(results)
+                res.json(results);
+                console.log('GET /api/restaurants/detail/:id is completed!');
+            }
             res.json(results);
         }
     );
 });
 app.get('/api/restaurants/:id/menu', (req, res) => {
     const restaurantId = req.params.id;
+    console.log("restaurantId2 ", restaurantId);
     let sql = 'SELECT * FROM menu WHERE restaurant_idrestaurant = ?';
     connection.query(sql, restaurantId,
         (error, results, fields) => {
             if (error) throw error;
-            res.json(results);
+            else {
+                console.log(results)
+                res.json(results);
+                console.log('GET /api/restaurants/:id/menu is completed!');
+            }
         }
     );
 });
