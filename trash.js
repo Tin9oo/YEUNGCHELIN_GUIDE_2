@@ -1,7 +1,7 @@
 //작성일: 2023/12/13
 //목적  : 가게 상세 팝업 구현
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import ListItemText from '@mui/material/ListItemText';
@@ -16,7 +16,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="down" ref={ref} {...props} />;
+    return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export default function RestaurantDetailPopup(props) {
@@ -26,14 +26,14 @@ export default function RestaurantDetailPopup(props) {
     const [menuInfo, setMenuInfo] = useState([]);
 
     useEffect(() => {
-        fetch(`/api/restaurants/detail/${props}`)
+        fetch(`/api/restaurants/detail/${0}`)
             .then((response) => response.json())
             .then((data) => setRestInfo(data))
             .catch((error) => console.log("Error fetching data: ", error));
         console.log('Fetch is completed!');
         console.log(restInfo);
 
-        fetch(`/api/restaurants/detail/${props}/menu`)
+        fetch(`/api/restaurants/detail/${0}/menu`)
             .then((response) => response.json())
             .then((data) => setMenuInfo(data))
             .catch((error) => console.log("Error fetching data: ", error));
@@ -52,7 +52,7 @@ export default function RestaurantDetailPopup(props) {
         <React.Fragment>
 
             {/* Button on main page */}
-            <Button variant="contained" onClick={handleClickOpen}>
+            <Button variant="outlined" onClick={handleClickOpen}>
                 Restaurant detail
             </Button>
 
@@ -94,28 +94,27 @@ export default function RestaurantDetailPopup(props) {
                     <ListItem>
                         <ListItemText
                             primary={`
-                            가게평점: ${restInfo.star_score} / 
-                            시그니처메뉴: ${restInfo.signature_menu} / 
-                            동서남북: ${restInfo.Coarse_location} / 
-                            전화번호: ${restInfo.telnum} / 
-                            실제주소: ${restInfo.Real_location} \n
-                            운영시간: ${restInfo.operation_hour} / 
-                            휴식시간: ${restInfo.breakingtime}`}
-                    />
+                                가게평점: ${restInfo.star_score} / 
+                                시그니처메뉴: ${restInfo.signature_menu} / 
+                                동서남북: ${restInfo.Coarse_location} / 
+                                전화번호: ${restInfo.telnum} / 
+                                실제주소: ${restInfo.Real_location} \n
+                                운영시간: ${restInfo.operation_hour} / 
+                                휴식시간: ${restInfo.breakingtime}`}
+                        />
                     </ListItem>
                     <Divider />
                     <ListItem>
                         <ListItemText primary="메뉴" />
                     </ListItem>
-                    {/* 메뉴 정보를 map으로 순회하여 각 아이템 렌더링 */}
-                    {menuInfo.menuList && menuInfo.menuList.map((menu, index) => (
+                    {/* 메뉴 정보를 map으로 순회하여 각 아이템 렌더링 menuInfo는 하나의 테이블, name은 한 행(한 튜플)*/}
+                    {menuInfo.map((menu, index) => (
                         <ListItem key={index}>
                             <ListItemText primary={menu.name} />
                             <ListItemText primary={menu.price} />
                         </ListItem>
                     ))}
                 </List>
-
             </Dialog>
         </React.Fragment>
     );
