@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
+import { Accordion, AccordionSummary, AccordionDetails, setRef } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
-export default function Comp_multiple_values({ onValueChange }) {
+export default function Comp_multiple_values({ onValueChange, refresh, setRefresh }) {
   const [restName, setRestName] = useState([]);
   const [restCat, setRestCat] = useState([]);
   const [restLoc, setRestLoc] = useState([]);
@@ -28,7 +28,7 @@ export default function Comp_multiple_values({ onValueChange }) {
       .then((response) => response.json())
       .then((data) => setRestLoc(data))
       .catch((error) => console.log("Error fetching data: ", error));
-  }, []);
+  }, [refresh]);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
