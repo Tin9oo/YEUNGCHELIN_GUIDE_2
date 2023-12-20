@@ -21,24 +21,47 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function RestaurantDetailPopup(props) {
 
-    console.log('RestaurantDetailPopup 컴포넌트 로딩됨');
-
     const [open, setOpen] = React.useState(false);
+    const [edit_able, setEditable] = useState(false); //수정 가능 여부
     const [restInfo, setRestInfo] = useState([]);
     const [menuInfo, setMenuInfo] = useState([]);
 
-    useEffect(() => {
-        fetch("/api/restaurants/:0")
-          .then((response) => response.json())
-          .then((data) => setRestInfo(data))
-          .catch((error) => console.log("Error fetching data: ", error));
-    
-        fetch("/api/restaurants/:0/menu")
-          .then((response) => response.json())
-          .then((data) => setMenuInfo(data))
-          .catch((error) => console.log("Error fetching data: ", error));
-      }, []);
+    const restaurantUrl = "/api/restaurants/:0";
+    const menuUrl = "/api/restaurants/:0/menu";
 
+    useEffect(() => {
+        RestInfo();
+        console.log("why;;");
+        MenuInfo();
+        console.log("notWorking;;");
+    }, []);
+
+    const RestInfo = () => {
+        fetch(restaurantUrl)
+        .then((response) => response.json())
+        .then((data) => {
+            setRestInfo(data);
+            console.log("Rest Info:", data);
+        })
+        .catch((error) => console.log("Error fetching data: ", error));
+    }
+
+    const MenuInfo = () => {
+        fetch(menuUrl)
+        .then((response) => response.json())
+        .then((data) => {
+            setMenuInfo(data);
+            console.log("Menu Info:", data);
+        })
+        .catch((error) => console.log("Error fetching data: ", error));
+    }
+
+    const handleEditable = () => {
+        setEditable(true);
+    };
+    const handleEditableClose = () => {
+        setEditable(false);
+    };
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -77,6 +100,10 @@ export default function RestaurantDetailPopup(props) {
                     </Toolbar>
                 </AppBar>
 
+                <Typography color="text.secondary">
+                {`${restInfo.category1}/${restInfo.category2}`}
+              </Typography>
+
                 <List>
                     <ListItem>
                         <ListItemText
@@ -93,7 +120,7 @@ export default function RestaurantDetailPopup(props) {
                             실제주소: ${restInfo.Real_location} \n
                             운영시간: ${restInfo.operation_hour} / 
                             휴식시간: ${restInfo.breakingtime}`}
-                    />
+                        />
                     </ListItem>
                     <Divider />
                     <ListItem>

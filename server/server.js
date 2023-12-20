@@ -94,9 +94,9 @@ app.post('/api/restaurants/search', (req, res) => {
             if (error) {
                 return res.status(500).send('Server Error');
             } else {
-                console.log(results);
+                //console.log(results);
                 res.json(results);
-                console.log('GET /api/restaurant/search is completed!');
+                //console.log('GET /api/restaurant/search is completed!');
             }
         }
     );
@@ -104,31 +104,30 @@ app.post('/api/restaurants/search', (req, res) => {
 
 app.get('/api/restaurants/:id', (req, res) => {
     const restaurantId = req.params.id;
-    console.log("restaurantId1 ", restaurantId);
-    let sql = 'SELECT * FROM restaurant WHERE idrestaurant = ?';
+    console.log("restaurantId1", restaurantId);
+    let sql = 'SELECT * FROM restaurant WHERE idrestaurant = (?)';
     connection.query(sql, restaurantId,
         (error, results, fields) => {
             if (error) throw error;
             else {
                 console.log(results)
                 res.json(results);
-                console.log('GET /api/restaurants/detail/:id is completed!');
+                //console.log('GET /api/restaurants/detail/:id is completed!');
             }
-            res.json(results);
         }
     );
 });
 app.get('/api/restaurants/:id/menu', (req, res) => {
     const restaurantId = req.params.id;
-    console.log("restaurantId2 ", restaurantId);
-    let sql = 'SELECT * FROM menu WHERE restaurant_idrestaurant = ?';
+    console.log("restaurantId2", restaurantId);
+    let sql = 'SELECT * FROM menu WHERE restaurant_idrestaurant = (?)';
     connection.query(sql, restaurantId,
         (error, results, fields) => {
             if (error) throw error;
             else {
                 console.log(results)
                 res.json(results);
-                console.log('GET /api/restaurants/:id/menu is completed!');
+                // console.log('GET /api/restaurants/:id/menu is completed!');
             }
         }
     );
