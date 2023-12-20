@@ -100,33 +100,29 @@ export default function RestaurantDetailPopup(props) {
                     </Toolbar>
                 </AppBar>
 
-                <Typography color="text.secondary">
-                {`${restInfo.category1}/${restInfo.category2}`}
-              </Typography>
-
                 <List>
                     <ListItem>
                         <ListItemText
-                            primary={restInfo.name}
-                            secondary={`${restInfo.category1}/${restInfo.category2}`} />
+                            primary={`${restInfo[0].name}`}
+                            secondary={`${restInfo[0].category1}/${restInfo[0].category2}`} />
                     </ListItem>
                     <ListItem>
                         <ListItemText
                             primary={`
-                            가게평점: ${restInfo.star_score} / 
-                            시그니처메뉴: ${restInfo.signature_menu} / 
-                            동서남북: ${restInfo.Coarse_location} / 
-                            전화번호: ${restInfo.telnum} / 
-                            실제주소: ${restInfo.Real_location} \n
-                            운영시간: ${restInfo.operation_hour} / 
-                            휴식시간: ${restInfo.breakingtime}`}
+                            가게평점: ${restInfo[0].star_score} / 
+                            시그니처메뉴: ${restInfo[0].signature_menu} / 
+                            동서남북: ${restInfo[0].Coarse_location} / 
+                            전화번호: ${restInfo[0].telnum} / 
+                            실제주소: ${restInfo[0].Real_location} \n
+                            운영시간: ${restInfo[0]['operation hour']} / 
+                            휴식시간: ${restInfo[0].breakingtime}`}
                         />
                     </ListItem>
                     <Divider />
                     <ListItem>
                         <ListItemText primary="메뉴" />
                     </ListItem>
-                    {menuInfo.menuList && menuInfo.menuList.map((menu, index) => (
+                    {menuInfo && menuInfo.map((menu, index) => (
                         <ListItem key={index}>
                             <ListItemText primary={menu.name} />
                             <ListItemText primary={menu.price} />

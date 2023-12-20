@@ -127,7 +127,7 @@ app.get('/api/restaurants/:id/menu', (req, res) => {
             else {
                 console.log(results)
                 res.json(results);
-                // console.log('GET /api/restaurants/:id/menu is completed!');
+                console.log('GET /api/restaurants/:id/menu is completed!');
             }
         }
     );
