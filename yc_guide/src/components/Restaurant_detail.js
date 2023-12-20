@@ -22,18 +22,18 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function RestaurantDetailPopup(props) {
 
     const [open, setOpen] = React.useState(false);
-    const [edit_able, setEditable] = useState(false); //수정 가능 여부
     const [restInfo, setRestInfo] = useState([]);
     const [menuInfo, setMenuInfo] = useState([]);
+
+    const [editable, setEditable] = useState(false); //수정 가능 여부
+    const [editedRestInfo, setEditedRestInfo] = useState([]);
 
     const restaurantUrl = "/api/restaurants/:0";
     const menuUrl = "/api/restaurants/:0/menu";
 
     useEffect(() => {
         RestInfo();
-        console.log("why;;");
         MenuInfo();
-        console.log("notWorking;;");
     }, []);
 
     const RestInfo = () => {
