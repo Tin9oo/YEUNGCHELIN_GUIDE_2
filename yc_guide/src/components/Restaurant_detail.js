@@ -94,7 +94,7 @@ export default function RestaurantDetailPopup(props) {
                         <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
                             Restaurant detail
                         </Typography>
-                        <Button autoFocus color="inherit" onClick={handleClose}>
+                        <Button autoFocus color="inherit" onClick={handleEditable}>
                             Edit
                         </Button>
                     </Toolbar>
