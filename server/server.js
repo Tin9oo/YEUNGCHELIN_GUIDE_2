@@ -11,10 +11,18 @@ const db_conf = JSON.parse(db_info);
 
 const connection = mysql.createConnection(db_conf);
 
-connection.connect(error => {
-    if (error) throw error;
-    console.log('Successfully connected to the database.');
-})
+// connection.connect(error => {
+//     if (error) throw error;
+//     console.log('Successfully connected to the database.');
+// })
+
+connection.connect((err) => {
+    if (err) {
+      console.error('데이터베이스에 연결하는 중 오류 발생:', err);
+      return;
+    }
+    console.log('데이터베이스에 연결되었습니다');
+  });
 
 app.get('/api/restaurants', (req, res) => {
     let sql = 'SELECT * FROM restaurant';
@@ -94,9 +102,9 @@ app.post('/api/restaurants/search', (req, res) => {
             if (error) {
                 return res.status(500).send('Server Error');
             } else {
-                //console.log(results);
+                console.log(results);
                 res.json(results);
-                //console.log('GET /api/restaurant/search is completed!');
+                console.log('GET /api/restaurant/search is completed!');
             }
         }
     );
@@ -105,11 +113,13 @@ app.post('/api/restaurants/search', (req, res) => {
 app.get('/api/restaurants/:id', (req, res) => {
     const restaurantId = req.params.id;
     console.log("restaurantId1", restaurantId);
-    let sql = 'SELECT * FROM restaurant WHERE idrestaurant = (?)';
-    connection.query(sql, restaurantId,
+    let sql = 'SELECT * FROM restaurant WHERE idrestaurant = ?';
+    connection.query(sql, restaurantId[1],
         (error, results, fields) => {
-            if (error) throw error;
-            else {
+            if (error) {
+                console.error('SQL 쿼리 실행 중 오류 발생:', error);
+                res.status(500).json({ error: '내부 서버 오류' });
+              } else {
                 console.log(results)
                 res.json(results);
                 //console.log('GET /api/restaurants/detail/:id is completed!');
@@ -120,14 +130,16 @@ app.get('/api/restaurants/:id', (req, res) => {
 app.get('/api/restaurants/:id/menu', (req, res) => {
     const restaurantId = req.params.id;
     console.log("restaurantId2", restaurantId);
-    let sql = 'SELECT * FROM menu WHERE restaurant_idrestaurant = (?)';
-    connection.query(sql, restaurantId,
+    let sql = 'SELECT * FROM menu WHERE restaurant_idrestaurant = ?';
+    connection.query(sql, restaurantId[1],
         (error, results, fields) => {
-            if (error) throw error;
-            else {
+            if (error) {
+                console.error('SQL 쿼리 실행 중 오류 발생:', error);
+                res.status(500).json({ error: '내부 서버 오류' });
+              } else {
                 console.log(results)
                 res.json(results);
-                console.log('GET /api/restaurants/:id/menu is completed!');
+                //console.log('GET /api/restaurants/:id/menu is completed!');
             }
         }
     );

@@ -28,8 +28,8 @@ export default function RestaurantDetailPopup(props) {
     const [editable, setEditable] = useState(false); //수정 가능 여부
     const [editedRestInfo, setEditedRestInfo] = useState([]);
 
-    const restaurantUrl = "/api/restaurants/:0";
-    const menuUrl = "/api/restaurants/:0/menu";
+    const restaurantUrl = "/api/restaurants/:1";
+    const menuUrl = "/api/restaurants/:1/menu";
 
     useEffect(() => {
         RestInfo();
@@ -38,22 +38,22 @@ export default function RestaurantDetailPopup(props) {
 
     const RestInfo = () => {
         fetch(restaurantUrl)
-        .then((response) => response.json())
-        .then((data) => {
-            setRestInfo(data);
-            console.log("Rest Info:", data);
-        })
-        .catch((error) => console.log("Error fetching data: ", error));
+            .then((response) => response.json())
+            .then((data) => {
+                setRestInfo(data);
+                console.log("Rest Info:", data);
+            })
+            .catch((error) => console.log("Error fetching data: ", error));
     }
 
     const MenuInfo = () => {
         fetch(menuUrl)
-        .then((response) => response.json())
-        .then((data) => {
-            setMenuInfo(data);
-            console.log("Menu Info:", data);
-        })
-        .catch((error) => console.log("Error fetching data: ", error));
+            .then((response) => response.json())
+            .then((data) => {
+                setMenuInfo(data);
+                console.log("Menu Info:", data);
+            })
+            .catch((error) => console.log("Error fetching data: ", error));
     }
 
     const handleEditable = () => {
@@ -68,6 +68,8 @@ export default function RestaurantDetailPopup(props) {
     const handleClose = () => {
         setOpen(false);
     };
+
+    console.log('')
 
     return (
         <React.Fragment>
@@ -94,29 +96,30 @@ export default function RestaurantDetailPopup(props) {
                         <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
                             Restaurant detail
                         </Typography>
-                        <Button autoFocus color="inherit" onClick={handleEditable}>
+                        <Button autoFocus color="inherit" onClick={handleClose}>
                             Edit
                         </Button>
                     </Toolbar>
                 </AppBar>
-
                 <List>
                     <ListItem>
-                        <ListItemText
-                            primary={`${restInfo[0].name}`}
-                            secondary={`${restInfo[0].category1}/${restInfo[0].category2}`} />
+                        {restInfo[0] && (
+                            <ListItemText
+                                primary={`${restInfo[0].name}`}
+                                secondary={`${restInfo[0].category1}/${restInfo[0].category2}`} />
+                        )}
                     </ListItem>
                     <ListItem>
-                        <ListItemText
-                            primary={`
-                            가게평점: ${restInfo[0].star_score} / 
-                            시그니처메뉴: ${restInfo[0].signature_menu} / 
-                            동서남북: ${restInfo[0].Coarse_location} / 
-                            전화번호: ${restInfo[0].telnum} / 
-                            실제주소: ${restInfo[0].Real_location} \n
-                            운영시간: ${restInfo[0]['operation hour']} / 
-                            휴식시간: ${restInfo[0].breakingtime}`}
-                        />
+                        {restInfo[0] && (
+                            <ListItemText
+                                primary={`
+                                    전화번호: ${restInfo[0].telnum} / 
+                                    동서남북: ${restInfo[0].coarse_location} / 
+                                    실제주소: ${restInfo[0].real_location} /
+                                    운영시간: ${restInfo[0].operation_hour} / 
+                                    휴식시간: ${restInfo[0].breakingtime}`}
+                            />
+                        )}
                     </ListItem>
                     <Divider />
                     <ListItem>
@@ -124,8 +127,10 @@ export default function RestaurantDetailPopup(props) {
                     </ListItem>
                     {menuInfo && menuInfo.map((menu, index) => (
                         <ListItem key={index}>
-                            <ListItemText primary={menu.name} />
-                            <ListItemText primary={menu.price} />
+                            <>
+                                <ListItemText primary={menu.name} />
+                                <ListItemText primary={menu.price} />
+                            </>
                         </ListItem>
                     ))}
                 </List>

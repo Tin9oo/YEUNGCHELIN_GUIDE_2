@@ -1,34 +1,34 @@
-import { useEffect, useState } from 'react';
+// import { useEffect, useState } from 'react';
 import './App.css';
-import Comp_multiple_values from './components/Comp_multiple_values';
-import Comp_filtered_item from './components/Comp_filtered_item';
+// import Comp_multiple_values from './components/Comp_multiple_values';
+// import Comp_filtered_item from './components/Comp_filtered_item';
 import RestaurantDetailPopup from './components/Restaurant_detail';
 
 function App() {
-  const [selRest, setSelRest] = useState({
-    name: [],
-    category1: [],
-    coarse_location: []
-  });
+  // const [selRest, setSelRest] = useState({
+  //   name: [],
+  //   category1: [],
+  //   coarse_location: []
+  // });
 
-  useEffect(() => {
-    console.log(selRest);
-  }, [selRest]);
+  // useEffect(() => {
+  //   console.log(selRest);
+  // }, [selRest]);
 
-  const handleSelRest = (selType, values) => {
-    setSelRest(prevSelRest => ({
-      ...prevSelRest,
-      [selType]: values
-    }));
-    console.log(`[${selType}]: ${values}`);
-  };
+  // const handleSelRest = (selType, values) => {
+  //   setSelRest(prevSelRest => ({
+  //     ...prevSelRest,
+  //     [selType]: values
+  //   }));
+  //   console.log(`[${selType}]: ${values}`);
+  // };
 
   return (
     <div className="App">
-      <Comp_multiple_values onValueChange={handleSelRest}/>
+      {/* <Comp_multiple_values onValueChange={handleSelRest}/>
       
-      <Comp_filtered_item selRest={selRest}/>
-      <RestaurantDetailPopup props={0} />
+      <Comp_filtered_item selRest={selRest}/> */}
+      <RestaurantDetailPopup props={1} />
     </div>
   );
 }
