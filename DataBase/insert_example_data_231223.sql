@@ -83,12 +83,12 @@ INSERT INTO user_login VALUES
 ('ASD','ASDF'),
 ('ZXC','ZXCV');
 
-INSERT INTO user_rating (restaurant_idrestaurant, `user score`,user_login_user_id, star_score) VALUES
-(3,4,'QWE', 4),
-(3,3,'ASD', 3),
-(3,5,'ZXC', 1),
-(5,2,'ASD', 2),
-(4,1,'QWE', 4),
-(6,7,'ASD', 3),
-(6,3,'QWE', 5);
-SELECT * FROM user_rating;
+INSERT INTO rating_list (restaurant_idrestaurant, user_login_user_id, `comment`, star_score) VALUES
+(3,'QWE', '맛있네요', 4),
+(3,'ASD', '또 올게요', 3),
+(3,'ZXC', '별로..', 1),
+(5,'ASD', '그냥 저냥..', 2),
+(4,'QWE', '왕굳', 4),
+(6,'ASD', '굳', 3),
+(6,'QWE', '천상의 맛', 5);
+SELECT * FROM rating_list;
