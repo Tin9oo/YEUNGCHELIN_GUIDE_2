@@ -8,7 +8,8 @@ import Box from "@mui/material/Box";
 
 export default function Comp_multiple_values({ onValueChange, refresh, setRefresh }) {
   const [restName, setRestName] = useState([]);
-  const [restCat, setRestCat] = useState([]);
+  const [restCat1, setRestCat1] = useState([]);
+  const [restCat2, setRestCat2] = useState([]);
   const [restLoc, setRestLoc] = useState([]);
 
   const [expanded, setExpanded] = useState(false);
@@ -21,7 +22,12 @@ export default function Comp_multiple_values({ onValueChange, refresh, setRefres
 
     fetch("/api/restaurants/category1")
       .then((response) => response.json())
-      .then((data) => setRestCat(data))
+      .then((data) => setRestCat1(data))
+      .catch((error) => console.log("Error fetching data: ", error));
+
+    fetch("/api/restaurants/category2")
+      .then((response) => response.json())
+      .then((data) => setRestCat2(data))
       .catch((error) => console.log("Error fetching data: ", error));
 
     fetch("/api/restaurants/coarse_location")
@@ -77,7 +83,7 @@ export default function Comp_multiple_values({ onValueChange, refresh, setRefres
           <Autocomplete
             multiple
             id="tags-standard"
-            options={restCat}
+            options={restCat1}
             getOptionLabel={(option) => option.category1}
             onChange={(event, newValue) => {
               onValueChange('category1', newValue.map(item => item.category1));
@@ -87,6 +93,24 @@ export default function Comp_multiple_values({ onValueChange, refresh, setRefres
                 {...params}
                 variant="standard"
                 label="카테고리"
+                placeholder="입력하세요"
+              />
+            )}
+            style={{ width: 500 }}
+          />
+          <Autocomplete
+            multiple
+            id="tags-standard"
+            options={restCat2}
+            getOptionLabel={(option) => option.category2}
+            onChange={(event, newValue) => {
+              onValueChange('category2', newValue.map(item => item.category2));
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                variant="standard"
+                label="상세 카테고리"
                 placeholder="입력하세요"
               />
             )}

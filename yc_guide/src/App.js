@@ -9,6 +9,7 @@ function App() {
   const [selRest, setSelRest] = useState({
     name: [],
     category1: [],
+    category2: [],
     coarse_location: []
   });
 

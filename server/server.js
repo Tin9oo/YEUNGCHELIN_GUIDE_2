@@ -1,6 +1,7 @@
 const express = require("express");
 const mysql = require("mysql");
 const fs = require("fs");
+const { openStdin } = require("process");
 const app = express();
 const port = process.env.PORT || 8080;
 
@@ -41,6 +42,28 @@ app.post("/api/restaurants", (req, res) => {
     star_score,
   } = req.body;
   console.log(req.body);
+
+	if (!name) {
+		return res.status(400).send('상호명을 입력하십시오.');
+	}
+	if(!category1 || !category2) {
+		return res.status(400).send('카테고리를 입력하세요.');
+	}
+	if (!telnum || !telnum.match(/^(010-?[0-9]{4}-?[0-9]{4})$/)) {
+		return res.status(400).send('유효하지 않은 전화번호 형식입니다.');
+	}
+	if (!coarse_location || !['동', '서', '남', '북'].includes(coarse_location)) {
+		return res.status(400).send("유효하지 않은 구역입니다.");
+	}
+	if (op_hour_start >= op_hour_end) {
+		return res.status(400).send("영업 시작 시간이 마감 시간보다 빨라야합니다.");
+	}
+	if (bk_time_start >= bk_time_end) {
+		return res.status(400).send("브레이크타임 시작 시간이 마감 시간보다 빨라야합니다.");
+	}
+	if (bk_time_start < op_hour_start || bk_time_end > op_hour_end) {
+		return res.status(400).send("브레이크타임은 영업시간 내에 있어야합니다.");
+	}
 
   let op_hour = op_hour_start + ":00" + " ~ " + op_hour_end + ":00";
   let bk_time = bk_time_start + ":00" + " ~ " + bk_time_end + ":00";
@@ -83,6 +106,14 @@ app.get("/api/restaurants/category1", (req, res) => {
   });
 });
 
+app.get("/api/restaurants/category2", (req, res) => {
+  const sql = "SELECT DISTINCT category2 FROM restaurant";
+  connection.query(sql, (error, results, fields) => {
+    if (error) throw error;
+    res.json(results);
+  });
+});
+
 app.get("/api/restaurants/coarse_location", (req, res) => {
   const sql = "SELECT DISTINCT coarse_location FROM restaurant";
   connection.query(sql, (error, results, fields) => {
@@ -93,7 +124,8 @@ app.get("/api/restaurants/coarse_location", (req, res) => {
 
 app.post("/api/restaurants/search", (req, res) => {
   const restName = req.body.name;
-  const restCat = req.body.category1;
+  const restCat1 = req.body.category1;
+  const restCat2 = req.body.category2;
   const restLoc = req.body.coarse_location;
 	console.log('req.body', req.body);
 
@@ -105,11 +137,15 @@ app.post("/api/restaurants/search", (req, res) => {
     conditions.push("name IN (?)");
     params.push(restName);
   }
-  if (restCat.length) {
+  if (restCat1.length) {
     conditions.push("category1 IN (?)");
-    params.push(restCat);
+    params.push(restCat1);
   }
-  if (restLoc.length) {
+  if (restCat2.length) {
+    conditions.push("category2 IN (?)");
+    params.push(restCat2);
+  }
+	if (restLoc.length) {
     conditions.push("coarse_location IN (?)");
     params.push(restLoc);
   }
