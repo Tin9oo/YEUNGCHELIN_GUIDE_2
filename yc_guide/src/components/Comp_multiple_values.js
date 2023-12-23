@@ -96,9 +96,9 @@ export default function Comp_multiple_values({ onValueChange, refresh, setRefres
             multiple
             id="tags-standard"
             options={restLoc}
-            getOptionLabel={(option) => option.Coarse_location}
+            getOptionLabel={(option) => option.coarse_location}
             onChange={(event, newValue) => {
-              onValueChange('coarse_location', newValue.map(item => item.Coarse_location));
+              onValueChange('coarse_location', newValue.map(item => item.coarse_location));
             }}
             renderInput={(params) => (
               <TextField

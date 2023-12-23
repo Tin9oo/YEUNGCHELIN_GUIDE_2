@@ -32,49 +32,37 @@ app.post("/api/restaurants", (req, res) => {
     category1,
     category2,
     telnum,
-    Coarse_location,
-    REAL_Location,
-    opHourStart,
-    opHourEnd,
-    bkTimeStart,
-    bkTimeEnd,
+    coarse_location,
+    real_location,
+    op_hour_start,
+    op_hour_end,
+    bk_time_start,
+    bk_time_end,
     star_score,
   } = req.body;
   console.log(req.body);
 
-  let opHour = opHourStart + ":00" + " ~ " + opHourEnd + ":00";
-  let bkTime = bkTimeStart + ":00" + " ~ " + bkTimeEnd + ":00";
+  let op_hour = op_hour_start + ":00" + " ~ " + op_hour_end + ":00";
+  let bk_time = bk_time_start + ":00" + " ~ " + bk_time_end + ":00";
 
-  let newId = 0;
+  let sql =
+    "INSERT INTO restaurant VALUES(null, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
+
   connection.query(
-    "SELECT MAX(idrestaurant) as max_id FROM restaurant",
+    sql,
+    [
+      name,
+      category1,
+      category2,
+      telnum,
+      coarse_location,
+      real_location,
+      op_hour,
+      bk_time,
+    ],
     (error, results, fields) => {
       if (error) throw error;
-      newId = results[0].max_id + 1;
-      console.log("newId:", newId);
-
-      let sql =
-        "INSERT INTO restaurant VALUES( ?, ?, ?, ?, ?, ?, ?, '', ?, ?, ?, '', NOW())";
-
-      connection.query(
-        sql,
-        [
-          newId,
-          name,
-          category1,
-          category2,
-          telnum,
-          Coarse_location,
-          REAL_Location,
-          opHour,
-          bkTime,
-          Number(star_score),
-        ],
-        (error, results, fields) => {
-          if (error) throw error;
-          res.json(results);
-        }
-      );
+      res.json(results);
     }
   );
 });
@@ -96,7 +84,7 @@ app.get("/api/restaurants/category1", (req, res) => {
 });
 
 app.get("/api/restaurants/coarse_location", (req, res) => {
-  const sql = "SELECT DISTINCT Coarse_location FROM restaurant";
+  const sql = "SELECT DISTINCT coarse_location FROM restaurant";
   connection.query(sql, (error, results, fields) => {
     if (error) throw error;
     res.json(results);
@@ -107,6 +95,7 @@ app.post("/api/restaurants/search", (req, res) => {
   const restName = req.body.name;
   const restCat = req.body.category1;
   const restLoc = req.body.coarse_location;
+	console.log('req.body', req.body);
 
   let sql = "SELECT * FROM restaurant";
   let conditions = [];
@@ -121,7 +110,7 @@ app.post("/api/restaurants/search", (req, res) => {
     params.push(restCat);
   }
   if (restLoc.length) {
-    conditions.push("Coarse_location IN (?)");
+    conditions.push("coarse_location IN (?)");
     params.push(restLoc);
   }
 

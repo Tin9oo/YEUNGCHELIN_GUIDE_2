@@ -14,13 +14,12 @@ export default function Comp_addRestaurant({ refresh, setRefresh }) {
     category1: "",
     category2: "",
     telnum: "",
-    Coarse_location: "",
-    REAL_Location: "",
-    opHourStart: "09:00",
-    opHourEnd: "22:00",
-    bkTimeStart: "15:00",
-    bkTimeEnd: "17:00",
-    star_score: 0,
+    coarse_location: "",
+    real_location: "",
+    op_hour_start: "09:00",
+    op_hour_end: "22:00",
+    bk_time_start: "15:00",
+    bk_time_end: "17:00",
   });
 
   React.useEffect(() => {
@@ -119,9 +118,9 @@ export default function Comp_addRestaurant({ refresh, setRefresh }) {
             onChange={handleChange}
           />
           <TextField
-            name="Coarse_location"
+            name="coarse_location"
             margin="dense"
-            id="Coarse_location"
+            id="coarse_location"
             label="구역"
             type="text"
             fullWidth
@@ -129,9 +128,9 @@ export default function Comp_addRestaurant({ refresh, setRefresh }) {
             onChange={handleChange}
           />
           <TextField
-            name="REAL_Location"
+            name="real_location"
             margin="dense"
-            id="REAL_Location"
+            id="real_location"
             label="주소"
             type="text"
             fullWidth
@@ -139,9 +138,9 @@ export default function Comp_addRestaurant({ refresh, setRefresh }) {
             onChange={handleChange}
           />
           <TextField
-            name="opHourStart"
+            name="op_hour_start"
             margin="dense"
-            id="opHourStart"
+            id="op_hour_start"
             label="오픈시간"
             type="time"
             defaultValue="09:00"
@@ -156,9 +155,9 @@ export default function Comp_addRestaurant({ refresh, setRefresh }) {
             onChange={handleChange}
           />
           <TextField
-            name="opHourEnd"
+            name="op_hour_end"
             margin="dense"
-            id="opHourEnd"
+            id="op_hour_end"
             label="마감시간"
             type="time"
             defaultValue="22:00"
@@ -173,9 +172,9 @@ export default function Comp_addRestaurant({ refresh, setRefresh }) {
             onChange={handleChange}
           />
           <TextField
-            name="bkTimeStart"
+            name="bk_time_start"
             margin="dense"
-            id="bkTimeStart"
+            id="bk_time_start"
             label="Break time (시작)"
             type="time"
             defaultValue="15:00"
@@ -190,10 +189,10 @@ export default function Comp_addRestaurant({ refresh, setRefresh }) {
             onChange={handleChange}
           />
           <TextField
-            name="bkTimeEnd"
+            name="bk_time_end"
             margin="dense"
-            id="breakingtime (끝)"
-            label="bkTimeEnd"
+            id="bk_time_end"
+            label="breakingtime (끝)"
             type="time"
             defaultValue="17:00"
             InputLabelProps={{
@@ -202,16 +201,6 @@ export default function Comp_addRestaurant({ refresh, setRefresh }) {
             inputProps={{
               step: 300,
             }}
-            fullWidth
-            variant="standard"
-            onChange={handleChange}
-          />
-          <TextField
-            name="star_score"
-            margin="dense"
-            id="star_score"
-            label="별점"
-            type="number"
             fullWidth
             variant="standard"
             onChange={handleChange}

@@ -33,6 +33,7 @@ export default function Comp_filtered_item({ selRest, refresh, setRefresh }) {
       category1: selRest.category1,
       coarse_location: selRest.coarse_location,
     };
+    console.log(restInfoTmp);
 
     fetch(`api/restaurants/search`, {
       method: "POST",
@@ -70,10 +71,10 @@ export default function Comp_filtered_item({ selRest, refresh, setRefresh }) {
               </Typography>
               <Typography variant="body2">전화번호: {rest.telnum}</Typography>
               <Typography variant="body2">
-                위치: {rest.Coarse_location}
+                위치: {rest.coarse_location}
               </Typography>
               <Typography variant="body2">
-                운영 시간: {rest["operation hour"]}
+                운영 시간: {rest.operation_hour}
               </Typography>
               <Typography variant="body2">
                 휴식 시간: {rest.breakingtime}
