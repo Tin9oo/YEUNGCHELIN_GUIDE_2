@@ -30,10 +30,13 @@ export default function RestaurantDetailPopup(props) {
     const menuUrl = "/api/restaurants/:1/menu";
     const EditRestaurantUrl = "/api/restaurants/:1/edit";
 
+    const [editingRestInfo, setEditingRestInfo] = useState([]);
+    const [editable, setEditable] = useState(false); //수정 가능 여부
+
     useEffect(() => {
         RestInfo();
         MenuInfo();
-    }, []);
+    }, [editable]);
 
     const RestInfo = () => {
         fetch(restaurantUrl)
@@ -61,10 +64,7 @@ export default function RestaurantDetailPopup(props) {
     const handleClose = () => {
         setOpen(false);
     };
-
-    const [editable, setEditable] = useState(false); //수정 가능 여부
-    const [editingRestInfo, setEditingRestInfo] = useState([]);
-
+    
     const EditClose = () => {
         //setOpen(false);
         setEditable(false);
