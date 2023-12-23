@@ -12,6 +12,7 @@ export default function Comp_filtered_item({ selRest, refresh, setRefresh }) {
     if (
       selRest.name.length === 0 &&
       selRest.category1.length === 0 &&
+      selRest.category2.length === 0 &&
       selRest.coarse_location.length === 0
     ) {
       allRest();
@@ -31,6 +32,7 @@ export default function Comp_filtered_item({ selRest, refresh, setRefresh }) {
     const restInfoTmp = {
       name: selRest.name,
       category1: selRest.category1,
+      category2: selRest.category2,
       coarse_location: selRest.coarse_location,
     };
     console.log(restInfoTmp);
