@@ -28,7 +28,7 @@ export default function RestaurantDetailPopup(props) {
 
     const restaurantUrl = "/api/restaurants/:1";
     const menuUrl = "/api/restaurants/:1/menu";
-    const EditRestaurantUrl= "/api/restaurants/:1/edit";
+    const EditRestaurantUrl = "/api/restaurants/:1/edit";
 
     useEffect(() => {
         RestInfo();
@@ -82,10 +82,37 @@ export default function RestaurantDetailPopup(props) {
     const handleEditableClose = () => {
         console.log('Saved changes:', editedRestInfo);
         setEditable(false);
+        updateRestaurantInfo();
+    };
+    const EditClose = () => {
+        setOpen(false); //취향 껏 바꾸자잉
+        setEditable(false);
     };
 
-    const updateRestaurantInfo = (editedData) => {
-        fetch(restaurantUrl, {
+    const [Restname, setName] = useState(restInfo[0]?.name || '');
+    const [Restcategory1, setCategory1] = useState(restInfo[0]?.category1 || '');
+    const [Restcategory2, setCategory2] = useState(restInfo[0]?.category2 || '');
+    const [Resttelnum, setTelnum] = useState(restInfo[0]?.telnum || '');
+    const [RestcoarseLocation, setCoarseLocation] = useState(restInfo[0]?.coarse_location || '');
+    const [RestrealLocation, setRealLocation] = useState(restInfo[0]?.real_location || '');
+    const [RestoperationHour, setOperationHour] = useState(restInfo[0]?.operation_hour || '');
+    const [RestbreakingTime, setBreakingTime] = useState(restInfo[0]?.breakingtime || '');
+
+    const updateRestaurantInfo = () => {
+        const now = new Date();
+        const editedData = {
+            name:Restname, 
+            category1:Restcategory1, 
+            category2:Restcategory2, 
+            telnum:Resttelnum, 
+            coarse_location:RestcoarseLocation, 
+            real_location: RestrealLocation, 
+            operation_hour:RestoperationHour, 
+            breakingtime:RestbreakingTime,
+            update_date: now.toISOString()
+        };
+    
+        fetch(EditRestaurantUrl, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -98,6 +125,7 @@ export default function RestaurantDetailPopup(props) {
         })
         .catch(error => console.error('Error updating data:', error));
     };
+    
 
     if (editable) {
         return (
@@ -117,7 +145,7 @@ export default function RestaurantDetailPopup(props) {
                             <IconButton
                                 edge="start"
                                 color="inherit"
-                                onClick={handleClose}
+                                onClick={EditClose}
                                 aria-label="close"
                             >
                                 <CloseIcon />
@@ -133,57 +161,65 @@ export default function RestaurantDetailPopup(props) {
                     <TextField
                         required
                         id="standard-required"
-                        label="가게명"
-                        defaultValue={`${restInfo[0].name}`}
+                        label={`${restInfo[0].name}`}
+                        value={Restname}
+                        onChange={(e) => setName(e.target.value)}
                         variant="standard"
                     />
                     <TextField
                         required
                         id="standard-required"
-                        label="카테고리1"
-                        defaultValue={`${restInfo[0].category1}`}
+                        label={`${restInfo[0].category1}`}
+                        value={Restcategory1}
+                        onChange={(e) => setCategory1(e.target.value)}
                         variant="standard"
                     />
                     <TextField
                         required
                         id="standard-required"
-                        label="카테고리2"
-                        defaultValue={`${restInfo[0].category2}`}
+                        label={`${restInfo[0].category2}`}
+                        value={Restcategory2}
+                        onChange={(e) => setCategory2(e.target.value)}
                         variant="standard"
                     />
                     <TextField
                         required
                         id="standard-required"
-                        label="전화번호"
-                        defaultValue={`${restInfo[0].telnum}`}
+                        label={`${restInfo[0].telnum}`}
+                        value={Resttelnum}
+                        onChange={(e) => setTelnum(e.target.value)}
                         variant="standard"
                     />
                     <TextField
                         required
                         id="standard-required"
-                        label="동서남북"
-                        defaultValue={`${restInfo[0].coarse_location}`}
+                        label={`${restInfo[0].coarse_location}`}
+                        value={RestcoarseLocation}
+                        onChange={(e) => setCoarseLocation(e.target.value)}
                         variant="standard"
                     />
                     <TextField
                         required
                         id="standard-required"
-                        label="실제주소"
-                        defaultValue={`${restInfo[0].real_location}`}
+                        label={`${restInfo[0].real_location}`}
+                        value={RestrealLocation}
+                        onChange={(e) => setRealLocation(e.target.value)}
                         variant="standard"
                     />
                     <TextField
                         required
                         id="standard-required"
-                        label="운영시간"
-                        defaultValue={`${restInfo[0].operation_hour}`}
+                        label={`${restInfo[0].operation_hour}`}
+                        value={RestoperationHour}
+                        onChange={(e) => setOperationHour(e.target.value)}
                         variant="standard"
                     />
                     <TextField
                         required
                         id="standard-required"
-                        label="휴식시간"
-                        defaultValue={`${restInfo[0].breakingtime}`}
+                        label={`${restInfo[0].breakingtime}`}
+                        value={RestbreakingTime}
+                        onChange={(e) => setBreakingTime(e.target.value)}
                         variant="standard"
                     />
 
