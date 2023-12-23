@@ -144,6 +144,47 @@ app.get('/api/restaurants/:id/menu', (req, res) => {
         }
     );
 });
+app.post('/api/restaurants/:id/edit', (req, res) => {
+    const restName = req.body.name;
+    const restCat = req.body.category1;
+    const restLoc = req.body.coarse_location;
+
+    let sql = 'SELECT * FROM restaurant';
+    let conditions = [];
+    let params = [];
+
+    if (restName.length) {
+        conditions.push('name IN (?)');
+        params.push(restName);
+    }
+    if (restCat.length) {
+        conditions.push('category1 IN (?)');
+        params.push(restCat);
+    }
+    if (restLoc.length) {
+        conditions.push('Coarse_location IN (?)');
+        params.push(restLoc);
+    }
+
+    if (conditions.length) {
+        sql += ' WHERE ' + conditions.join(' AND ');
+    }
+
+    console.log('sql:\n', sql);
+
+    connection.query(
+        sql, params,
+        (error, results, fields) => {
+            if (error) {
+                return res.status(500).send('Server Error');
+            } else {
+                console.log(results);
+                res.json(results);
+                console.log('GET /api/restaurant/search is completed!');
+            }
+        }
+    );
+});
 
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
