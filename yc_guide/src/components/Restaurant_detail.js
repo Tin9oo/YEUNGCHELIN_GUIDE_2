@@ -43,7 +43,7 @@ export default function RestaurantDetailPopup(props) {
                 console.log("Rest Info:", data);
             })
             .catch((error) => console.log("Error fetching data: ", error));
-    }
+    };
 
     const MenuInfo = () => {
         fetch(menuUrl)
@@ -53,7 +53,7 @@ export default function RestaurantDetailPopup(props) {
                 console.log("Menu Info:", data);
             })
             .catch((error) => console.log("Error fetching data: ", error));
-    }
+    };
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -94,19 +94,17 @@ export default function RestaurantDetailPopup(props) {
             update_date: restInfo[0].update_date
         });
 
-        console.log("bye",restInfo[0].name)
-        console.log("hi", editingRestInfo.name)
-        setName(editingRestInfo.name);
-        console.log(Restname)
+        console.log("bye",restInfo[0]);
+        console.log("hi", editingRestInfo.name);
 
-        setCategory1(editingRestInfo.category1)
-        setCategory1(editingRestInfo.category2)
-        setTelnum(editingRestInfo.telnum)
-        setCoarseLocation(editingRestInfo.coarse_location)
-        setRealLocation(editingRestInfo.real_location)
-        setOperationHour(editingRestInfo.operation_hour)
-        setBreakingTime(editingRestInfo.breaking_time)
-
+        setName(editingRestInfo); console.log(Restname);
+        setCategory1(editingRestInfo.category1);
+        setCategory1(editingRestInfo.category2);
+        setTelnum(editingRestInfo.telnum);
+        setCoarseLocation(editingRestInfo.coarse_location);
+        setRealLocation(editingRestInfo.real_location);
+        setOperationHour(editingRestInfo.operation_hour);
+        setBreakingTime(editingRestInfo.breaking_time);
     };
     const saveButton = () => {
         updateRestaurantInfo();
@@ -127,7 +125,7 @@ export default function RestaurantDetailPopup(props) {
             update_date: now.toISOString()
         });
 
-        console.log(editingRestInfo)
+        console.log(editingRestInfo);
 
         console.log('Data updated successfully:');
 
