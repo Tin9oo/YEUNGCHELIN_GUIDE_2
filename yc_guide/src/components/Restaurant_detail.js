@@ -63,11 +63,26 @@ export default function RestaurantDetailPopup(props) {
     };
 
     const [editable, setEditable] = useState(false); //수정 가능 여부
-    const [editedRestInfo, setEditedRestInfo] = useState([]);
+    const [editingRestInfo, setEditingRestInfo] = useState([]);
+
+    const EditClose = () => {
+        //setOpen(false);
+        setEditable(false);
+    };
+
+    const [Restname, setName] = useState([]);
+    const [Restcategory1, setCategory1] = useState([]);
+    const [Restcategory2, setCategory2] = useState([]);
+    const [Resttelnum, setTelnum] = useState([]);
+    const [RestcoarseLocation, setCoarseLocation] = useState([]);
+    const [RestrealLocation, setRealLocation] = useState([]);
+    const [RestoperationHour, setOperationHour] = useState([]);
+    const [RestbreakingTime, setBreakingTime] = useState([]);
 
     const handleEditable = () => {
         setEditable(true);
-        setEditedRestInfo({
+        setEditingRestInfo({
+            ID: restInfo[0].idrestaurant,
             name: restInfo[0].name,
             category1: restInfo[0].category1,
             category2: restInfo[0].category2,
@@ -78,54 +93,58 @@ export default function RestaurantDetailPopup(props) {
             breakingtime: restInfo[0].breakingtime,
             update_date: restInfo[0].update_date
         });
-    };
-    const handleEditableClose = () => {
-        console.log('Saved changes:', editedRestInfo);
-        setEditable(false);
-        updateRestaurantInfo();
-    };
-    const EditClose = () => {
-        setOpen(false); //취향 껏 바꾸자잉
-        setEditable(false);
-    };
 
-    const [Restname, setName] = useState(restInfo[0]?.name || '');
-    const [Restcategory1, setCategory1] = useState(restInfo[0]?.category1 || '');
-    const [Restcategory2, setCategory2] = useState(restInfo[0]?.category2 || '');
-    const [Resttelnum, setTelnum] = useState(restInfo[0]?.telnum || '');
-    const [RestcoarseLocation, setCoarseLocation] = useState(restInfo[0]?.coarse_location || '');
-    const [RestrealLocation, setRealLocation] = useState(restInfo[0]?.real_location || '');
-    const [RestoperationHour, setOperationHour] = useState(restInfo[0]?.operation_hour || '');
-    const [RestbreakingTime, setBreakingTime] = useState(restInfo[0]?.breakingtime || '');
+        console.log("bye",restInfo[0].name)
+        console.log("hi", editingRestInfo.name)
+        setName(editingRestInfo.name);
+        console.log(Restname)
+
+        setCategory1(editingRestInfo.category1)
+        setCategory1(editingRestInfo.category2)
+        setTelnum(editingRestInfo.telnum)
+        setCoarseLocation(editingRestInfo.coarse_location)
+        setRealLocation(editingRestInfo.real_location)
+        setOperationHour(editingRestInfo.operation_hour)
+        setBreakingTime(editingRestInfo.breaking_time)
+
+    };
+    const saveButton = () => {
+        updateRestaurantInfo();
+        setEditable(false);
+    };
 
     const updateRestaurantInfo = () => {
         const now = new Date();
-        const editedData = {
-            name:Restname, 
-            category1:Restcategory1, 
-            category2:Restcategory2, 
-            telnum:Resttelnum, 
-            coarse_location:RestcoarseLocation, 
-            real_location: RestrealLocation, 
-            operation_hour:RestoperationHour, 
-            breakingtime:RestbreakingTime,
+        setEditingRestInfo({
+            name: Restname,
+            category1: Restcategory1,
+            category2: Restcategory2,
+            telnum: Resttelnum,
+            coarse_location: RestcoarseLocation,
+            real_location: RestrealLocation,
+            operation_hour: RestoperationHour,
+            breakingtime: RestbreakingTime,
             update_date: now.toISOString()
-        };
-    
+        });
+
+        console.log(editingRestInfo)
+
+        console.log('Data updated successfully:');
+
         fetch(EditRestaurantUrl, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(editedData),
+            body: JSON.stringify(editingRestInfo),
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Data updated successfully:', data);
-        })
-        .catch(error => console.error('Error updating data:', error));
+            .then(response => response.json())
+            .then(data => {
+                console.log('Data updated successfully:', data);
+            })
+            .catch(error => console.error('Error updating data:', error));
     };
-    
+
 
     if (editable) {
         return (
@@ -153,15 +172,16 @@ export default function RestaurantDetailPopup(props) {
                             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
                                 Restaurant detail
                             </Typography>
-                            <Button autoFocus color="inherit" onClick={handleEditableClose}>
+                            <Button autoFocus color="inherit" onClick={saveButton}>
                                 SAVE
                             </Button>
                         </Toolbar>
                     </AppBar>
+
                     <TextField
                         required
                         id="standard-required"
-                        label={`${restInfo[0].name}`}
+                        label="name"
                         value={Restname}
                         onChange={(e) => setName(e.target.value)}
                         variant="standard"
@@ -169,7 +189,7 @@ export default function RestaurantDetailPopup(props) {
                     <TextField
                         required
                         id="standard-required"
-                        label={`${restInfo[0].category1}`}
+                        label="category1"
                         value={Restcategory1}
                         onChange={(e) => setCategory1(e.target.value)}
                         variant="standard"
@@ -177,7 +197,7 @@ export default function RestaurantDetailPopup(props) {
                     <TextField
                         required
                         id="standard-required"
-                        label={`${restInfo[0].category2}`}
+                        label="category2"
                         value={Restcategory2}
                         onChange={(e) => setCategory2(e.target.value)}
                         variant="standard"
@@ -185,7 +205,7 @@ export default function RestaurantDetailPopup(props) {
                     <TextField
                         required
                         id="standard-required"
-                        label={`${restInfo[0].telnum}`}
+                        label="telnum"
                         value={Resttelnum}
                         onChange={(e) => setTelnum(e.target.value)}
                         variant="standard"
@@ -193,7 +213,7 @@ export default function RestaurantDetailPopup(props) {
                     <TextField
                         required
                         id="standard-required"
-                        label={`${restInfo[0].coarse_location}`}
+                        label="coarse_location"
                         value={RestcoarseLocation}
                         onChange={(e) => setCoarseLocation(e.target.value)}
                         variant="standard"
@@ -201,7 +221,7 @@ export default function RestaurantDetailPopup(props) {
                     <TextField
                         required
                         id="standard-required"
-                        label={`${restInfo[0].real_location}`}
+                        label="real_location"
                         value={RestrealLocation}
                         onChange={(e) => setRealLocation(e.target.value)}
                         variant="standard"
@@ -209,7 +229,7 @@ export default function RestaurantDetailPopup(props) {
                     <TextField
                         required
                         id="standard-required"
-                        label={`${restInfo[0].operation_hour}`}
+                        label="operation_hour"
                         value={RestoperationHour}
                         onChange={(e) => setOperationHour(e.target.value)}
                         variant="standard"
@@ -217,7 +237,7 @@ export default function RestaurantDetailPopup(props) {
                     <TextField
                         required
                         id="standard-required"
-                        label={`${restInfo[0].breakingtime}`}
+                        label="breaking_time"
                         value={RestbreakingTime}
                         onChange={(e) => setBreakingTime(e.target.value)}
                         variant="standard"
