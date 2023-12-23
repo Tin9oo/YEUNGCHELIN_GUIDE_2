@@ -49,7 +49,7 @@ app.post("/api/restaurants", (req, res) => {
 	if(!category1 || !category2) {
 		return res.status(400).send('카테고리를 입력하세요.');
 	}
-	if (!telnum || !telnum.match(/^\d{10,11}$/)) {
+	if (!telnum || !telnum.match(/^(010-?[0-9]{4}-?[0-9]{4})$/)) {
 		return res.status(400).send('유효하지 않은 전화번호 형식입니다.');
 	}
 	if (!coarse_location || !['동', '서', '남', '북'].includes(coarse_location)) {

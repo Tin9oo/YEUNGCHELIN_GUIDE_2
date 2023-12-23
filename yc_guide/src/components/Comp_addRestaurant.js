@@ -75,7 +75,7 @@ export default function Comp_addRestaurant({ refresh, setRefresh }) {
         alert("카테고리를 입력하세요.");
         return;
       }
-      if (!restInput.telnum || !restInput.telnum.match(/^\d{10,11}$/)) {
+      if (!restInput.telnum || !restInput.telnum.match(/^(010-?[0-9]{4}-?[0-9]{4})$/)) {
         alert("유효하지 않은 전화번호 형식입니다.");
         return;
       }
@@ -174,7 +174,7 @@ export default function Comp_addRestaurant({ refresh, setRefresh }) {
             name="telnum"
             margin="dense"
             id="telnum"
-            label="연락처 (특수문자 없이 입력하세요)"
+            label="연락처"
             type="text"
             fullWidth
             variant="standard"
