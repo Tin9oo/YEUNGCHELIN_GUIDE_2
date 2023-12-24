@@ -31,7 +31,18 @@ export default function RestaurantDetailPopup(props) {
     const menuUrl = "/api/restaurants/:1/menu";
     const EditRestaurantUrl = "/api/restaurants/:1/edit";
 
-    const [editingRestInfo, setEditingRestInfo] = useState([]);
+    const [editingRestInfo, setEditingRestInfo] = useState({
+        ID: restInfo.idrestaurant,
+        name: restInfo.name,
+        category1: restInfo.category1,
+        category2: restInfo.category2,
+        telnum: restInfo.telnum,
+        coarse_location: restInfo.coarse_location,
+        real_location: restInfo.real_location,
+        operation_hour: restInfo.operation_hour,
+        breakingtime: restInfo.breakingtime,
+        update_date: restInfo.update_date
+    });
     const [editable, setEditable] = useState(false); //수정 가능 여부
 
     useEffect(() => {
@@ -71,51 +82,51 @@ export default function RestaurantDetailPopup(props) {
         setEditable(false);
     };
 
-    const [Restname, setName] = useState();
-    const [Restcategory1, setCategory1] = useState();
-    const [Restcategory2, setCategory2] = useState();
-    const [Resttelnum, setTelnum] = useState();
-    const [RestcoarseLocation, setCoarseLocation] = useState();
-    const [RestrealLocation, setRealLocation] = useState();
-    const [RestoperationHour, setOperationHour] = useState();
-    const [RestbreakingTime, setBreakingTime] = useState();
+    // const [Restname, setName] = useState();
+    // const [Restcategory1, setCategory1] = useState();
+    // const [Restcategory2, setCategory2] = useState();
+    // const [Resttelnum, setTelnum] = useState();
+    // const [RestcoarseLocation, setCoarseLocation] = useState();
+    // const [RestrealLocation, setRealLocation] = useState();
+    // const [RestoperationHour, setOperationHour] = useState();
+    // const [RestbreakingTime, setBreakingTime] = useState();
 
-    const [edited, setEdited] = useState(1);
-    const [editButtonHit, setEditButtonHit] = useState(1);
+    // const [edited, setEdited] = useState(1);
+    // const [editButtonHit, setEditButtonHit] = useState(1);
 
-    useEffect(() => {
-        RestInfo();
-        setEditingRestInfo({
-             ID: restInfo.idrestaurant,
-             name: restInfo.name,
-             category1: restInfo.category1,
-             category2: restInfo.category2,
-             telnum: restInfo.telnum,
-             coarse_location: restInfo.coarse_location,
-             real_location: restInfo.real_location,
-             operation_hour: restInfo.operation_hour,
-             breakingtime: restInfo.breakingtime,
-             update_date: restInfo.update_date
-         });
+    // useEffect(() => {
+    //     RestInfo();
+        // setEditingRestInfo({
+        //      ID: restInfo.idrestaurant,
+        //      name: restInfo.name,
+        //      category1: restInfo.category1,
+        //      category2: restInfo.category2,
+        //      telnum: restInfo.telnum,
+        //      coarse_location: restInfo.coarse_location,
+        //      real_location: restInfo.real_location,
+        //      operation_hour: restInfo.operation_hour,
+        //      breakingtime: restInfo.breakingtime,
+        //      update_date: restInfo.update_date
+        //  });
 
-        console.log("restInfo", restInfo);
-        console.log("editingRestInfo", editingRestInfo);
+    //     console.log("restInfo", restInfo);
+    //     console.log("editingRestInfo", editingRestInfo);
 
-        setName(editingRestInfo); 
-        console.log("Restname", Restname);
+    //     setName(editingRestInfo); 
+    //     console.log("Restname", Restname);
 
-        setCategory1(editingRestInfo.category1);
-        setCategory1(editingRestInfo.category2);
-        setTelnum(editingRestInfo.telnum);
-        setCoarseLocation(editingRestInfo.coarse_location);
-        setRealLocation(editingRestInfo.real_location);
-        setOperationHour(editingRestInfo.operation_hour);
-        setBreakingTime(editingRestInfo.breakingtime);
-    }, [editButtonHit]);
+    //     setCategory1(editingRestInfo.category1);
+    //     setCategory1(editingRestInfo.category2);
+    //     setTelnum(editingRestInfo.telnum);
+    //     setCoarseLocation(editingRestInfo.coarse_location);
+    //     setRealLocation(editingRestInfo.real_location);
+    //     setOperationHour(editingRestInfo.operation_hour);
+    //     setBreakingTime(editingRestInfo.breakingtime);
+    // }, [editButtonHit]);
 
     const handleEditable = () => {
         setEditable(true);
-        setEditButtonHit(editButtonHit + 1)
+        //setEditButtonHit(editButtonHit + 1)
     };
     const saveButton = () => {
         updateRestaurantInfo();
@@ -123,18 +134,18 @@ export default function RestaurantDetailPopup(props) {
     };
 
     const updateRestaurantInfo = () => {
-        const now = new Date();
-        setEditingRestInfo({
-            name: Restname,
-            category1: Restcategory1,
-            category2: Restcategory2,
-            telnum: Resttelnum,
-            coarse_location: RestcoarseLocation,
-            real_location: RestrealLocation,
-            operation_hour: RestoperationHour,
-            breakingtime: RestbreakingTime,
-            update_date: now.toISOString()
-        });
+        // const now = new Date();
+        // setEditingRestInfo({
+        //     name: Restname,
+        //     category1: Restcategory1,
+        //     category2: Restcategory2,
+        //     telnum: Resttelnum,
+        //     coarse_location: RestcoarseLocation,
+        //     real_location: RestrealLocation,
+        //     operation_hour: RestoperationHour,
+        //     breakingtime: RestbreakingTime,
+        //     update_date: now.toISOString()
+        // });
 
         console.log(editingRestInfo);
 
@@ -179,76 +190,76 @@ export default function RestaurantDetailPopup(props) {
                                 <CloseIcon />
                             </IconButton>
                             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-                                Restaurant detail
+                                Restaurant detail Edit
                             </Typography>
                             <Button autoFocus color="inherit" onClick={saveButton}>
                                 SAVE
                             </Button>
                         </Toolbar>
                     </AppBar>
-
+                    
                     <TextField
                         required
                         id="standard-required"
                         label="name"
-                        value={Restname}
-                        onChange={(e) => setName(e.target.value)}
+                        value={restInfo[0].name}
+                        onChange={(e) => setEditingRestInfo({name: e.target.value})}
                         variant="standard"
                     />
                     <TextField
                         required
                         id="standard-required"
                         label="category1"
-                        value={Restcategory1}
-                        onChange={(e) => setCategory1(e.target.value)}
+                        value={restInfo[0].category1}
+                        onChange={(e) => setEditingRestInfo({category1: e.target.value})}
                         variant="standard"
                     />
                     <TextField
                         required
                         id="standard-required"
                         label="category2"
-                        value={Restcategory2}
-                        onChange={(e) => setCategory2(e.target.value)}
+                        value={restInfo[0].category2}
+                        onChange={(e) => setEditingRestInfo({category2: e.target.value})}
                         variant="standard"
                     />
                     <TextField
                         required
                         id="standard-required"
                         label="telnum"
-                        value={Resttelnum}
-                        onChange={(e) => setTelnum(e.target.value)}
+                        value={restInfo[0].telnum}
+                        onChange={(e) => setEditingRestInfo({telnum: e.target.value})}
                         variant="standard"
                     />
                     <TextField
                         required
                         id="standard-required"
                         label="coarse_location"
-                        value={RestcoarseLocation}
-                        onChange={(e) => setCoarseLocation(e.target.value)}
+                        value={restInfo[0].coarse_location}
+                        onChange={(e) => setEditingRestInfo({coarse_location: e.target.value})}
                         variant="standard"
                     />
                     <TextField
                         required
                         id="standard-required"
                         label="real_location"
-                        value={RestrealLocation}
-                        onChange={(e) => setRealLocation(e.target.value)}
+                        value={restInfo[0].real_location}
+                        onChange={(e) => setEditingRestInfo({real_location: e.target.value})}
                         variant="standard"
                     />
                     <TextField
                         required
                         id="standard-required"
                         label="operation_hour"
-                        value={RestoperationHour}
-                        onChange={(e) => setOperationHour(e.target.value)}
+                        value={restInfo[0].operation_hour}
+                        onChange={(e) => setEditingRestInfo({operation_hour: e.target.value})}
                         variant="standard"
                     />
                     <TextField
                         required
                         id="standard-required"
                         label="breaking_time"
-                        value={RestbreakingTime}
-                        onChange={(e) => setBreakingTime(e.target.value)}
+                        value={restInfo[0].breakingtime}
+                        onChange={(e) => setEditingRestInfo({breakingtime: e.target.value})}
                         variant="standard"
                     />
 
@@ -292,8 +303,7 @@ export default function RestaurantDetailPopup(props) {
                     fullScreen
                     open={open}
                     onClose={handleClose}
-                    TransitionComponent={Transition}
-                >
+                    TransitionComponent={Transition}>
                     <AppBar sx={{ position: 'relative' }}>
                         <Toolbar>
                             <IconButton
