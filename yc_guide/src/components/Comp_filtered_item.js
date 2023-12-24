@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardMedia, Typography } from "@mui/material";
 import { Button, CardActionArea, CardActions } from "@mui/material";
+import Restaurant_detail from "./Restaurant_detail";
 
 export default function Comp_filtered_item({ selRest, refresh, setRefresh }) {
   const [restInfo, setRestInfo] = useState([]);
+
+  const [popupOpen, setPopupOpen] = useState(false);
+  const [selRestId, setSelRestId] = useState(-1);
 
   useEffect(() => {
     console.log("Length of selRest: ", selRest.length);
@@ -20,6 +24,11 @@ export default function Comp_filtered_item({ selRest, refresh, setRefresh }) {
       filteredRest();
     }
   }, [selRest, refresh]);
+
+  useEffect(() => {
+    console.log("popupOpen: ", popupOpen);
+    console.log("selRestId: ", selRestId);
+  }, [popupOpen, selRestId]);
 
   const allRest = () => {
     fetch("api/restaurants")
@@ -50,11 +59,18 @@ export default function Comp_filtered_item({ selRest, refresh, setRefresh }) {
     console.log("Function filtered_Rest is completed!");
   };
 
+  const handleCardClick = (id) => {
+    setPopupOpen(true);
+    setSelRestId(id);
+    // console.log("popupOpen: ", popupOpen);
+    // console.log("selRestId: ", selRestId);
+  };
+
   return (
     <div>
       {restInfo.map((rest, index) => (
         <Card key={rest.idrestaurant} sx={{ maxWidth: 275, margin: 2 }}>
-          <CardActionArea>
+          <CardActionArea onClick={() => handleCardClick(rest.idrestaurant)}>
             {/* <CardMedia
               component="img"
               height="140"
@@ -85,6 +101,13 @@ export default function Comp_filtered_item({ selRest, refresh, setRefresh }) {
           </CardActionArea>
         </Card>
       ))}
+      {popupOpen && (
+        <Restaurant_detail
+          open={popupOpen}
+          setOpen={setPopupOpen}
+          id={selRestId}
+        />
+      )}
     </div>
   );
 }
