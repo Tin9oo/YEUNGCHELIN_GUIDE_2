@@ -96,18 +96,18 @@ export default function RestaurantDetailPopup(props) {
 
     // useEffect(() => {
     //     RestInfo();
-        // setEditingRestInfo({
-        //      ID: restInfo.idrestaurant,
-        //      name: restInfo.name,
-        //      category1: restInfo.category1,
-        //      category2: restInfo.category2,
-        //      telnum: restInfo.telnum,
-        //      coarse_location: restInfo.coarse_location,
-        //      real_location: restInfo.real_location,
-        //      operation_hour: restInfo.operation_hour,
-        //      breakingtime: restInfo.breakingtime,
-        //      update_date: restInfo.update_date
-        //  });
+    //     setEditingRestInfo({
+    //          ID: restInfo.idrestaurant,
+    //          name: restInfo.name,
+    //          category1: restInfo.category1,
+    //          category2: restInfo.category2,
+    //          telnum: restInfo.telnum,
+    //          coarse_location: restInfo.coarse_location,
+    //          real_location: restInfo.real_location,
+    //          operation_hour: restInfo.operation_hour,
+    //          breakingtime: restInfo.breakingtime,
+    //          update_date: restInfo.update_date
+    //      });
 
     //     console.log("restInfo", restInfo);
     //     console.log("editingRestInfo", editingRestInfo);
@@ -126,6 +126,8 @@ export default function RestaurantDetailPopup(props) {
 
     const handleEditable = () => {
         setEditable(true);
+        let editNumber=0;
+        editNumber+=1;
         //setEditButtonHit(editButtonHit + 1)
     };
     const saveButton = () => {
