@@ -23,8 +23,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function RestaurantDetailPopup(props) {
 
     const [open, setOpen] = React.useState(false);
-    const [restInfo, setRestInfo] = useState([]);
+    const [restInfo, setRestInfo] = useState({});
     const [menuInfo, setMenuInfo] = useState([]);
+    //useState({}) : 객체로 초기화 useState([]) : 배열로 초기화
 
     const restaurantUrl = "/api/restaurants/:1";
     const menuUrl = "/api/restaurants/:1/menu";
@@ -64,47 +65,57 @@ export default function RestaurantDetailPopup(props) {
     const handleClose = () => {
         setOpen(false);
     };
-    
+
     const EditClose = () => {
         //setOpen(false);
         setEditable(false);
     };
 
-    const [Restname, setName] = useState([]);
-    const [Restcategory1, setCategory1] = useState([]);
-    const [Restcategory2, setCategory2] = useState([]);
-    const [Resttelnum, setTelnum] = useState([]);
-    const [RestcoarseLocation, setCoarseLocation] = useState([]);
-    const [RestrealLocation, setRealLocation] = useState([]);
-    const [RestoperationHour, setOperationHour] = useState([]);
-    const [RestbreakingTime, setBreakingTime] = useState([]);
+    const [Restname, setName] = useState();
+    const [Restcategory1, setCategory1] = useState();
+    const [Restcategory2, setCategory2] = useState();
+    const [Resttelnum, setTelnum] = useState();
+    const [RestcoarseLocation, setCoarseLocation] = useState();
+    const [RestrealLocation, setRealLocation] = useState();
+    const [RestoperationHour, setOperationHour] = useState();
+    const [RestbreakingTime, setBreakingTime] = useState();
 
-    const handleEditable = () => {
-        setEditable(true);
+    const [edited, setEdited] = useState(1);
+    const [editButtonHit, setEditButtonHit] = useState(1);
+
+    useEffect(() => {
+        RestInfo();
         setEditingRestInfo({
-            ID: restInfo[0].idrestaurant,
-            name: restInfo[0].name,
-            category1: restInfo[0].category1,
-            category2: restInfo[0].category2,
-            telnum: restInfo[0].telnum,
-            coarse_location: restInfo[0].coarse_location,
-            real_location: restInfo[0].real_location,
-            operation_hour: restInfo[0].operation_hour,
-            breakingtime: restInfo[0].breakingtime,
-            update_date: restInfo[0].update_date
-        });
+             ID: restInfo.idrestaurant,
+             name: restInfo.name,
+             category1: restInfo.category1,
+             category2: restInfo.category2,
+             telnum: restInfo.telnum,
+             coarse_location: restInfo.coarse_location,
+             real_location: restInfo.real_location,
+             operation_hour: restInfo.operation_hour,
+             breakingtime: restInfo.breakingtime,
+             update_date: restInfo.update_date
+         });
 
-        console.log("bye",restInfo[0]);
-        console.log("hi", editingRestInfo.name);
+        console.log("restInfo", restInfo);
+        console.log("editingRestInfo", editingRestInfo);
 
-        setName(editingRestInfo); console.log(Restname);
+        setName(editingRestInfo); 
+        console.log("Restname", Restname);
+
         setCategory1(editingRestInfo.category1);
         setCategory1(editingRestInfo.category2);
         setTelnum(editingRestInfo.telnum);
         setCoarseLocation(editingRestInfo.coarse_location);
         setRealLocation(editingRestInfo.real_location);
         setOperationHour(editingRestInfo.operation_hour);
-        setBreakingTime(editingRestInfo.breaking_time);
+        setBreakingTime(editingRestInfo.breakingtime);
+    }, [editButtonHit]);
+
+    const handleEditable = () => {
+        setEditable(true);
+        setEditButtonHit(editButtonHit + 1)
     };
     const saveButton = () => {
         updateRestaurantInfo();
