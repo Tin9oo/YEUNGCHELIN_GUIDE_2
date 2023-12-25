@@ -20,8 +20,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="down" ref={ref} {...props} />;
 });
 
-export default function RestaurantDetailPopup(props) {
-  const [open, setOpen] = React.useState(false);
+export default function RestaurantDetailPopup({ open, setOpen, id }) {
+//   const [open, setOpen] = React.useState(false);
   const [restInfo, setRestInfo] = useState({});
   //   const [restInfo, setRestInfo] = useState([]);
   const [menuInfo, setMenuInfo] = useState([]);
