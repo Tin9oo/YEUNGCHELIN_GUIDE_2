@@ -52,16 +52,42 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
 
   const [editable, setEditable] = useState(false); //수정 가능 여부
   const [saveButtonHit, setSaveButtonHit] = useState(1);
+  const [likeButtonHit, setLikeButtonHit] = useState(0);
   const [editingMenu, setEditingMenu] = useState([]);
 
-  const handleLikesCount = () => {
+  const handleLikesCount = async (restId, menuName) => {
     //LIKE 버튼 눌렀을 때
+    try {
+      const data = {
+        restId: restId,
+        menuName: menuName,
+      };
+
+      console.log("data: ", data);
+
+      const response = await fetch("api/restaurants/menu/likes", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        console.log("좋아요 등록 성공");
+        setLikeButtonHit(likeButtonHit+1);
+      } else {
+        console.error("좋아요 등록 실패");
+      }
+    } catch (error) {
+      console.error("서버 오류: ", error);
+    }
   };
 
   useEffect(() => {
     RestInfo();
     MenuInfo();
-  }, [editButtonHit, saveButtonHit]);
+  }, [editButtonHit, saveButtonHit,likeButtonHit]);
 
   const RestInfo = () => {
     fetch(restaurantUrl)
@@ -416,7 +442,15 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
                     <ListItemText primary={menu.name} />
                     <ListItemText primary={menu.price} />
                     <ListItemText primary={menu.likes} />
-                    <Button autoFocus color="inherit" onClick={handleLikesCount}>I LIKE IT</Button>
+                    <Button
+                      autoFocus
+                      color="inherit"
+                      onClick={() =>
+                        handleLikesCount(restInfo[0].idrestaurant, menu.name)
+                      }
+                    >
+                      I LIKE IT
+                    </Button>
                   </>
                 </ListItem>
               ))}
