@@ -21,7 +21,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function RestaurantDetailPopup({ open, setOpen, id }) {
-//   const [open, setOpen] = React.useState(false);
+  //   const [open, setOpen] = React.useState(false);
   const [restInfo, setRestInfo] = useState({});
   //   const [restInfo, setRestInfo] = useState([]);
   const [menuInfo, setMenuInfo] = useState([]);
@@ -58,6 +58,7 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
 
   const [editable, setEditable] = useState(false); //수정 가능 여부
   const [saveButtonHit, setSaveButtonHit] = useState(1);
+  const [likeButtonHit, setLikeButtonHit] = useState(0);
 
   const [editingMenu, setEditingMenu] = useState([]);
   const [editableMenu, setEditableMenu] = useState(false);
@@ -65,7 +66,7 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
   useEffect(() => {
     RestInfo();
     MenuInfo();
-  }, [editButtonHit, saveButtonHit]);
+  }, [editButtonHit, saveButtonHit, likeButtonHit]);
 
   const RestInfo = () => {
     fetch(restaurantUrl)
@@ -88,7 +89,7 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
       .catch((error) => console.log("데이터를 불러오는 중 에러 발생: ", error));
 
     console.log("MenuInfo setMenuInfo", editingMenu);
-    console.log("length", editingMenu.length)
+    console.log("length", editingMenu.length);
   };
 
   // const MenuInfo = () => {
@@ -158,7 +159,7 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
 
   useEffect(() => {
     const now = new Date();
-    const formattedDate = now.toISOString().split('T')[0];
+    const formattedDate = now.toISOString().split("T")[0];
     console.log("시간", now);
     console.log("Restname when save Button hitted", Restname);
     setEditingRestInfo((prevEditingRestInfo) => ({
@@ -172,10 +173,19 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
       operation_hour: RestoperationHour,
       breakingtime: RestbreakingTime,
       //update_date: now.toISOString(),
-      update_date: formattedDate
+      update_date: formattedDate,
     }));
     console.log("editingRestInfo that changed", editingRestInfo);
-  }, [Restname, Restcategory1, Restcategory2, Resttelnum, RestcoarseLocation, RestrealLocation, RestoperationHour, RestbreakingTime]);
+  }, [
+    Restname,
+    Restcategory1,
+    Restcategory2,
+    Resttelnum,
+    RestcoarseLocation,
+    RestrealLocation,
+    RestoperationHour,
+    RestbreakingTime,
+  ]);
 
   const updateRestaurantInfo = () => {
     fetch(EditRestaurantUrl, {
@@ -192,14 +202,39 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
       .catch((error) => console.error("Error updating data:", error));
   };
 
-
-  const handleLikesCount = () => {
+  const handleLikesCount = async (restId, menuName) => {
     //LIKE 버튼 눌렀을 때
+
+    try {
+      const data = {
+        restId: restId,
+        menuName: menuName,
+      };
+
+      console.log("data: ", data);
+
+      const response = await fetch("api/restaurants/menu/likes", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        console.log("좋아요 등록 성공");
+        setLikeButtonHit(likeButtonHit+1);
+      } else {
+        console.error("좋아요 등록 실패");
+      }
+    } catch (error) {
+      console.error("서버 오류: ", error);
+    }
   };
 
   const handleMenuChange = (index, field, value) => {
     //setEditingMenu
-    setEditableMenu ((prevEditingMenu) => {
+    setEditableMenu((prevEditingMenu) => {
       const updatedMenu = [...prevEditingMenu];
       updatedMenu[index][field] = value;
       return updatedMenu;
@@ -325,7 +360,9 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
                       id={`menu-name-${index}`}
                       label="메뉴명"
                       value={menu.name}
-                      onChange={(e) => handleMenuChange(index, 'name', e.target.value)}
+                      onChange={(e) =>
+                        handleMenuChange(index, "name", e.target.value)
+                      }
                       variant="standard"
                     />
                     <TextField
@@ -333,7 +370,9 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
                       id={`menu-price-${index}`}
                       label="가격"
                       value={menu.price}
-                      onChange={(e) => handleMenuChange(index, 'price', e.target.value)}
+                      onChange={(e) =>
+                        handleMenuChange(index, "price", e.target.value)
+                      }
                       variant="standard"
                     />
                     <TextField
@@ -341,7 +380,9 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
                       id="standard-required"
                       label="LIKES"
                       value={menu.likes}
-                      onChange={(e) => handleMenuChange(index, 'likes',e.target.value)}
+                      onChange={(e) =>
+                        handleMenuChange(index, "likes", e.target.value)
+                      }
                       //defaultValue={menu.price}
                       variant="standard"
                     />
@@ -480,14 +521,23 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
             <ListItem>
               <ListItemText primary="메뉴" />
             </ListItem>
-            {menuInfo &&
+            {restInfo[0] &&
+              menuInfo &&
               menuInfo.map((menu, index) => (
                 <ListItem key={index}>
                   <>
                     <ListItemText primary={menu.name} />
                     <ListItemText primary={menu.price} />
                     <ListItemText primary={menu.likes} />
-                    <Button autoFocus color="inherit" onClick={handleLikesCount}>I LIKE IT</Button>
+                    <Button
+                      autoFocus
+                      color="inherit"
+                      onClick={() =>
+                        handleLikesCount(restInfo[0].idrestaurant, menu.name)
+                      }
+                    >
+                      I LIKE IT
+                    </Button>
                   </>
                 </ListItem>
               ))}
