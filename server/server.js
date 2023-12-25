@@ -207,9 +207,9 @@ app.post('/api/restaurants/:id/edit', (req, res) => {
     const { ID, name, category1, category2, telnum, coarse_location, real_location,
         operation_hour, breakingtime, update_date } = req.body;
     const values = [name, category1, category2, telnum, coarse_location,
-        real_location, operation_hour, breakingtime, update_date, ID];
+        real_location, operation_hour, breakingtime, ID];
 
-    let sql = 'UPDATE restaurant SET name=?, category1=?, category2=?, telnum=?,coarse_location=?,real_location=?, operation_hour=?, breakingtime=?, update_date=? WHERE idrestaurant = ?';
+    let sql = 'UPDATE restaurant SET name=?, category1=?, category2=?, telnum=?,coarse_location=?,real_location=?, operation_hour=?, breakingtime=?, update_date=NOW() WHERE idrestaurant = ?';
 
     connection.query(sql, values, (error, results) => {
         if (error) {
@@ -220,6 +220,24 @@ app.post('/api/restaurants/:id/edit', (req, res) => {
             res.status(200).json({ message: 'Data updated successfully' });
         }
     });
+});
+app.post('/api/restaurants/:id/menu/edit', (req, res) => {
+    const { updatedMenu, menuInfo } = req.body;
+    console.log("updatedMenu:",updatedMenu);
+    console.log("menuInfo:",menuInfo);
+    connection.query(
+        'UPDATE menu SET name=?, price=?, likes=? WHERE (restaurant_idrestaurant=? AND name = ?)',
+        [updatedMenu.name, updatedMenu.price, updatedMenu.likes, updatedMenu.restaurant_idrestaurant, menuInfo.name],
+        (err, results) => {
+          if (err) {
+            console.error('Error updating menu:', err);
+            res.status(500).json({ success: false, message: 'Failed to update menu' });
+          } else {
+            console.log('Menu updated successfully');
+            res.json({ success: true, message: 'Menu updated successfully' });
+          }
+        }
+      );
 });
 
 app.listen(port, () => {

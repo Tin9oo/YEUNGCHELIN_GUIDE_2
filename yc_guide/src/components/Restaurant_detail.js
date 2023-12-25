@@ -30,6 +30,7 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
   const restaurantUrl = `/api/restaurants/:${id}`;
   const menuUrl = `/api/restaurants/:${id}/menu`;
   const EditRestaurantUrl = `/api/restaurants/:${id}/edit`;
+  const EditMenuUrl = `/api/restaurants/:${id}/menu/edit`;
 
   const [Restname, setName] = useState();
   const [Restcategory1, setCategory1] = useState();
@@ -40,7 +41,6 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
   const [RestoperationHour, setOperationHour] = useState();
   const [RestbreakingTime, setBreakingTime] = useState();
 
-  const [edited, setEdited] = useState(1);
   const [editButtonHit, setEditButtonHit] = useState(1);
 
   const [editingRestInfo, setEditingRestInfo] = useState({
@@ -58,9 +58,11 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
 
   const [editable, setEditable] = useState(false); //수정 가능 여부
   const [saveButtonHit, setSaveButtonHit] = useState(1);
-
   const [editingMenu, setEditingMenu] = useState([]);
-  const [editableMenu, setEditableMenu] = useState(false);
+
+  const handleLikesCount = () => {
+    //LIKE 버튼 눌렀을 때
+  };
 
   useEffect(() => {
     RestInfo();
@@ -72,8 +74,8 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
       .then((response) => response.json())
       .then((data) => {
         setRestInfo(data);
-        console.log("Rest Info:", restInfo);
-        console.log("restInfo.idrestaurant: ", restInfo[0].idrestaurant);
+        // console.log("Rest Info:", restInfo);
+        // console.log("restInfo.idrestaurant: ", restInfo[0].idrestaurant);
       })
       .catch((error) => console.log("Error fetching data: ", error));
   };
@@ -84,22 +86,13 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
       .then((data) => {
         setMenuInfo(data);
         setEditingMenu(data); // 가져온 데이터로 editingMenu 초기화
+        console.log("디버깅1번", editingMenu);
       })
       .catch((error) => console.log("데이터를 불러오는 중 에러 발생: ", error));
 
     console.log("MenuInfo setMenuInfo", editingMenu);
-    console.log("length", editingMenu.length)
+    //console.log("length", editingMenu.length)
   };
-
-  // const MenuInfo = () => {
-  //   fetch(menuUrl)
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       setMenuInfo(data);
-  //       console.log("Menu Info:", data);
-  //     })
-  //     .catch((error) => console.log("Error fetching data: ", error));
-  // };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -128,8 +121,8 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
         update_date: restInfo[0].update_date,
       });
 
-      console.log("restInfo in here", restInfo[0]);
-      console.log("editingRestInfo in here", editingRestInfo);
+      //console.log("restInfo in here", restInfo[0]);
+      //console.log("editingRestInfo in here", editingRestInfo);
 
       setName(restInfo[0].name);
       setCategory1(restInfo[0].category1);
@@ -145,22 +138,20 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
   const handleEditable = () => {
     setEditable(true);
     setEditButtonHit(editButtonHit + 1);
-    // console.log("editButtonHit:");
-    // console.log(editButtonHit);
   };
 
   const saveButton = () => {
     updateRestaurantInfo();
+    updateMenuInfo();
     setSaveButtonHit(saveButtonHit + 1);
-    // console.log("saveButtonHit", saveButtonHit);
     setEditable(false);
   };
 
   useEffect(() => {
     const now = new Date();
     const formattedDate = now.toISOString().split('T')[0];
-    console.log("시간", now);
-    console.log("Restname when save Button hitted", Restname);
+    //console.log("시간", now);
+    //console.log("Restname when save Button hitted", Restname);
     setEditingRestInfo((prevEditingRestInfo) => ({
       ...prevEditingRestInfo,
       name: Restname,
@@ -174,7 +165,7 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
       //update_date: now.toISOString(),
       update_date: formattedDate
     }));
-    console.log("editingRestInfo that changed", editingRestInfo);
+    //console.log("editingRestInfo that changed", editingRestInfo);
   }, [Restname, Restcategory1, Restcategory2, Resttelnum, RestcoarseLocation, RestrealLocation, RestoperationHour, RestbreakingTime]);
 
   const updateRestaurantInfo = () => {
@@ -192,16 +183,34 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
       .catch((error) => console.error("Error updating data:", error));
   };
 
+  const [updatedMenu, setUpdatedMenu] = useState([]);
 
-  const handleLikesCount = () => {
-    //LIKE 버튼 눌렀을 때
+  const updateMenuInfo = () => {
+    const requestBody = {
+      updatedMenu: updatedMenu,
+      menuInfo: menuInfo,
+    };
+
+    fetch(EditMenuUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Menu Data updated successfully:", data);
+    })
+    .catch((error) => console.error("Error updating data:", error));
   };
 
   const handleMenuChange = (index, field, value) => {
-    //setEditingMenu
-    setEditableMenu ((prevEditingMenu) => {
+    setEditingMenu ((prevEditingMenu) => {
       const updatedMenu = [...prevEditingMenu];
       updatedMenu[index][field] = value;
+      console.log("수정된 메뉴", updatedMenu);
+      setUpdatedMenu(updatedMenu);
       return updatedMenu;
     });
   };
@@ -242,7 +251,6 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
             required
             id="standard-required"
             label="name"
-            //value={restInfo[0].name}
             value={Restname}
             onChange={(e) => setName(e.target.value)}
             variant="standard"
@@ -251,7 +259,6 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
             required
             id="standard-required"
             label="category1"
-            //value={restInfo[0].category1}
             value={Restcategory1}
             onChange={(e) => setCategory1(e.target.value)}
             variant="standard"
@@ -260,7 +267,6 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
             required
             id="standard-required"
             label="category2"
-            //value={restInfo[0].category2}
             value={Restcategory2}
             onChange={(e) => setCategory2(e.target.value)}
             variant="standard"
@@ -269,7 +275,6 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
             required
             id="standard-required"
             label="telnum"
-            //value={restInfo[0].telnum}
             value={Resttelnum}
             onChange={(e) => setTelnum(e.target.value)}
             variant="standard"
@@ -278,7 +283,6 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
             required
             id="standard-required"
             label="coarse_location"
-            //value={restInfo[0].coarse_location}
             value={RestcoarseLocation}
             onChange={(e) => setCoarseLocation(e.target.value)}
             variant="standard"
@@ -287,7 +291,6 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
             required
             id="standard-required"
             label="real_location"
-            //value={restInfo[0].real_location}
             value={RestrealLocation}
             onChange={(e) => setRealLocation(e.target.value)}
             variant="standard"
@@ -296,7 +299,6 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
             required
             id="standard-required"
             label="operation_hour"
-            //value={restInfo[0].operation_hour}
             value={RestoperationHour}
             onChange={(e) => setOperationHour(e.target.value)}
             variant="standard"
@@ -305,19 +307,17 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
             required
             id="standard-required"
             label="breaking_time"
-            //value={restInfo[0].breakingtime}
             value={RestbreakingTime}
             onChange={(e) => setBreakingTime(e.target.value)}
             variant="standard"
           />
 
           <List>
-            <Divider />
+            <Divider/>
             <ListItem>
               <ListItemText primary="메뉴" />
             </ListItem>
-            {editingMenu &&
-              editingMenu.map((menu, index) => (
+            {editingMenu && editingMenu.map((menu, index) => (
                 <ListItem key={index}>
                   <>
                     <TextField
@@ -349,78 +349,6 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
                 </ListItem>
               ))}
           </List>
-
-          {/* <List>
-            <Divider/>
-            <ListItem>
-              <ListItemText primary="메뉴" />
-            </ListItem>
-
-            {editingMenu && editingMenu.map((menu, index) => (
-              <ListItem key={index}>
-                <>
-                  <TextField
-                    required
-                    id="standard-required"
-                    label="메뉴명"
-                    //defaultValue={menu.name}
-                    value={menu.name}
-                    onChange={(e) => setBreakingTime(e.target.value)}
-                    variant="standard"
-                  />
-                  <TextField
-                    required
-                    id="standard-required"
-                    label="가격"
-                    value={menu.price}
-                    onChange={(e) => setBreakingTime(e.target.value)}
-                    //defaultValue={menu.price}
-                    variant="standard"
-                  />
-                  <TextField
-                    required
-                    id="standard-required"
-                    label="LIKES"
-                    value={menu.likes}
-                    onChange={(e) => setBreakingTime(e.target.value)}
-                    //defaultValue={menu.price}
-                    variant="standard"
-                  />
-                </>
-              </ListItem>
-            ))}
-          </List> */}
-
-          {/* <List>
-            <Divider />
-            <ListItem>
-              <ListItemText primary="메뉴" />
-            </ListItem>
-            {menuInfo && menuInfo.map((menu, index) => (
-                <ListItem key={index}>
-                  <>
-                    <TextField
-                      required
-                      id="standard-required"
-                      label="메뉴명"
-                      //defaultValue={menu.name}
-                      value={menu.name}
-                      onChange={(e) =>setBreakingTime(e.target.value)}
-                      variant="standard"
-                    />
-                    <TextField
-                      required
-                      id="standard-required"
-                      label="가격"
-                      value={menu.price}
-                      onChange={(e) =>setBreakingTime(e.target.value)}
-                      //defaultValue={menu.price}
-                      variant="standard"
-                    />
-                  </>
-                </ListItem>
-              ))}
-          </List> */}
         </Dialog>
       </React.Fragment>
     );
