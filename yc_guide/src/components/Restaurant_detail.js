@@ -20,9 +20,11 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function RestaurantDetailPopup(props) {
-    const [open, setOpen] = React.useState(false);
+    // const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = React.useState(props.open);
     const handleClickOpen = () => {
         setOpen(true);
+        
     };
     const handleClose = () => {
         setOpen(false);
