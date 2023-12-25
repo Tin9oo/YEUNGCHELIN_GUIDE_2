@@ -171,7 +171,7 @@ app.get('/api/restaurants/:id', (req, res) => {
     const restaurantId = req.params.id;
     console.log("restaurantId1", restaurantId);
     let sql = 'SELECT * FROM restaurant WHERE idrestaurant = ?';
-    connection.query(sql, restaurantId[1],
+    connection.query(sql, restaurantId.split(':')[1],
         (error, results, fields) => {
             if (error) {
                 console.error('SQL 쿼리 실행 중 오류 발생:', error);
@@ -188,7 +188,7 @@ app.get('/api/restaurants/:id/menu', (req, res) => {
     const restaurantId = req.params.id;
     console.log("restaurantId2", restaurantId);
     let sql = 'SELECT * FROM menu WHERE restaurant_idrestaurant = ?';
-    connection.query(sql, restaurantId[1],
+    connection.query(sql, restaurantId.split(':')[1],
         (error, results, fields) => {
             if (error) {
                 console.error('SQL 쿼리 실행 중 오류 발생:', error);
