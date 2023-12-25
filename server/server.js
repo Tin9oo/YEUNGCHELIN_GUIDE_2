@@ -167,23 +167,59 @@ app.post("/api/restaurants/search", (req, res) => {
   });
 });
 
-{
-  /* 요청한 가게 id를 받아서 해당되는 가게정보/메뉴만 따로 끌어와야한다. */
-}
-{
-  /* 이때 해당 가게 id 어케 받음? */
-}
-app.get("/api/restaurants/detail/:id", (req, res) => {
-  const restaurantId = req.params.id;
-  let sql = ` SELECT restaurant.*, menu.* FROM restaurant
-    LEFT JOIN menu ON restaurant.idrestaurant = menu.restaurant_idrestaurant
-    WHERE restaurant.idrestaurant = ?`;
-  // let sql1 = 'SELECT * FROM restaurant WHERE idrestaurant = ?';
-  // let sql2 = 'SELECT * FROM menu WHERE restaurant_idrestaurant = ?';
-  connection.query(sql, restaurant_id, (error, results, fields) => {
-    if (error) throw error;
-    res.json(results);
-  });
+app.get('/api/restaurants/:id', (req, res) => {
+    const restaurantId = req.params.id;
+    console.log("restaurantId1", restaurantId);
+    let sql = 'SELECT * FROM restaurant WHERE idrestaurant = ?';
+    connection.query(sql, restaurantId[1],
+        (error, results, fields) => {
+            if (error) {
+                console.error('SQL 쿼리 실행 중 오류 발생:', error);
+                res.status(500).json({ error: '내부 서버 오류' });
+            } else {
+                console.log(results)
+                res.json(results);
+                //console.log('GET /api/restaurants/detail/:id is completed!');
+            }
+        }
+    );
+});
+app.get('/api/restaurants/:id/menu', (req, res) => {
+    const restaurantId = req.params.id;
+    console.log("restaurantId2", restaurantId);
+    let sql = 'SELECT * FROM menu WHERE restaurant_idrestaurant = ?';
+    connection.query(sql, restaurantId[1],
+        (error, results, fields) => {
+            if (error) {
+                console.error('SQL 쿼리 실행 중 오류 발생:', error);
+                res.status(500).json({ error: '내부 서버 오류' });
+            } else {
+                console.log(results)
+                res.json(results);
+                //console.log('GET /api/restaurants/:id/menu is completed!');
+            }
+        }
+    );
+});
+app.post('/api/restaurants/:id/edit', (req, res) => {
+    const restaurantId = req.params.id;
+    console.log("restaurantId in edit - server.js", restaurantId);
+    const { ID, name, category1, category2, telnum, coarse_location, real_location,
+        operation_hour, breakingtime, update_date } = req.body;
+    const values = [name, category1, category2, telnum, coarse_location,
+        real_location, operation_hour, breakingtime, update_date, ID];
+
+    let sql = 'UPDATE restaurant SET name=?, category1=?, category2=?, telnum=?,coarse_location=?,real_location=?, operation_hour=?, breakingtime=?, update_date=? WHERE idrestaurant = ?';
+
+    connection.query(sql, values, (error, results) => {
+        if (error) {
+            console.error('Error updating data:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        } else {
+            console.log('Data updated successfully:', results);
+            res.status(200).json({ message: 'Data updated successfully' });
+        }
+    });
 });
 
 app.listen(port, () => {
