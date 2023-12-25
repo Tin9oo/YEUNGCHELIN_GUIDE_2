@@ -27,9 +27,9 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
   const [menuInfo, setMenuInfo] = useState([]);
   //useState({}) : 객체로 초기화 useState([]) : 배열로 초기화
 
-  const restaurantUrl = "/api/restaurants/:1";
-  const menuUrl = "/api/restaurants/:1/menu";
-  const EditRestaurantUrl = "/api/restaurants/:1/edit";
+  const restaurantUrl = `/api/restaurants/:${id}`;
+  const menuUrl = `/api/restaurants/:${id}/menu`;
+  const EditRestaurantUrl = `/api/restaurants/:${id}/edit`;
 
   const [Restname, setName] = useState();
   const [Restcategory1, setCategory1] = useState();
