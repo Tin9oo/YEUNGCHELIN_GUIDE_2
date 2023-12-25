@@ -221,24 +221,44 @@ app.post('/api/restaurants/:id/edit', (req, res) => {
         }
     });
 });
-app.post('/api/restaurants/:id/menu/edit', (req, res) => {
+app.post("/api/restaurants/:id/menu/edit", async (req, res) => {
     const { updatedMenu, menuInfo } = req.body;
-    console.log("updatedMenu:",updatedMenu);
-    console.log("menuInfo:",menuInfo);
-    connection.query(
-        'UPDATE menu SET name=?, price=?, likes=? WHERE (restaurant_idrestaurant=? AND name = ?)',
-        [updatedMenu.name, updatedMenu.price, updatedMenu.likes, updatedMenu.restaurant_idrestaurant, menuInfo.name],
-        (err, results) => {
-          if (err) {
-            console.error('Error updating menu:', err);
-            res.status(500).json({ success: false, message: 'Failed to update menu' });
-          } else {
-            console.log('Menu updated successfully');
-            res.json({ success: true, message: 'Menu updated successfully' });
+    console.log("updatedMenu:", updatedMenu);
+    console.log("menuInfo:", menuInfo);
+  
+    const updateOperations = updatedMenu.map((menuItem, index) => {
+      return new Promise((resolve, reject) => {
+        const { name, price, likes, restaurant_idrestaurant } = menuItem;
+        const oldName = menuInfo[index].name;
+  
+        connection.query(
+          "UPDATE menu SET name=?, price=?, likes=? WHERE (restaurant_idrestaurant=? AND name = ?)",
+          [name, price, likes, restaurant_idrestaurant, oldName],
+          (err, results) => {
+            if (err) {
+              console.error("Error updating menu:", err);
+              // res
+              //   .status(500)
+              //   .json({ success: false, message: "Failed to update menu" });
+              reject(err);
+            } else {
+              console.log("Menu updated successfully");
+              // res.json({ success: true, message: "Menu updated successfully" });
+              resolve(results);
+            }
           }
-        }
-      );
-});
+        );
+      });
+    });
+  
+    try {
+      await Promise.all(updateOperations);
+      res.json({ success: true, message: "Menus updated successfully" });
+    } catch (err) {
+      console.error("Error updating menus:", err);
+      res.status(500).json({ success: false, message: "Failed to update menus" });
+    }
+  });
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);

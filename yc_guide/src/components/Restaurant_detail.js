@@ -1,6 +1,5 @@
 //작성일: 2023/12/13
 //목적  : 가게 상세 팝업 구현
-
 import React, { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -21,17 +20,14 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function RestaurantDetailPopup({ open, setOpen, id }) {
-//   const [open, setOpen] = React.useState(false);
-  const [restInfo, setRestInfo] = useState({});
-  //   const [restInfo, setRestInfo] = useState([]);
-  const [menuInfo, setMenuInfo] = useState([]);
-  //useState({}) : 객체로 초기화 useState([]) : 배열로 초기화
-
   const restaurantUrl = `/api/restaurants/:${id}`;
   const menuUrl = `/api/restaurants/:${id}/menu`;
   const EditRestaurantUrl = `/api/restaurants/:${id}/edit`;
   const EditMenuUrl = `/api/restaurants/:${id}/menu/edit`;
 
+  const [restInfo, setRestInfo] = useState({});
+  const [menuInfo, setMenuInfo] = useState([]);
+  //useState({}) : 객체로 초기화 useState([]) : 배열로 초기화
   const [Restname, setName] = useState();
   const [Restcategory1, setCategory1] = useState();
   const [Restcategory2, setCategory2] = useState();
@@ -40,9 +36,7 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
   const [RestrealLocation, setRealLocation] = useState();
   const [RestoperationHour, setOperationHour] = useState();
   const [RestbreakingTime, setBreakingTime] = useState();
-
   const [editButtonHit, setEditButtonHit] = useState(1);
-
   const [editingRestInfo, setEditingRestInfo] = useState({
     // ID: restInfo.idrestaurant,
     // name: restInfo.name,
@@ -85,14 +79,19 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
       .then((response) => response.json())
       .then((data) => {
         setMenuInfo(data);
-        setEditingMenu(data); // 가져온 데이터로 editingMenu 초기화
-        console.log("디버깅1번", editingMenu);
+        //setEditingMenu(data); // 가져온 데이터로 editingMenu 초기
       })
       .catch((error) => console.log("데이터를 불러오는 중 에러 발생: ", error));
 
-    console.log("MenuInfo setMenuInfo", editingMenu);
-    //console.log("length", editingMenu.length)
+      fetch(menuUrl)
+      .then((response) => response.json())
+      .then((data) => {setEditingMenu(data);})
+      .catch((error) => console.log("데이터를 불러오는 중 에러 발생: ", error));
   };
+
+  useEffect(() => {
+      setEditingMenu(menuInfo)
+  }, [menuInfo]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -190,6 +189,8 @@ export default function RestaurantDetailPopup({ open, setOpen, id }) {
       updatedMenu: updatedMenu,
       menuInfo: menuInfo,
     };
+    // console.log("수정된 정보",updatedMenu);
+    // console.log("수정 안된 정보",menuInfo);
 
     fetch(EditMenuUrl, {
       method: "POST",
