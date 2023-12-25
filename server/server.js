@@ -18,11 +18,11 @@ const connection = mysql.createConnection(db_conf);
 
 connection.connect((err) => {
     if (err) {
-      console.error('데이터베이스에 연결하는 중 오류 발생:', err);
-      return;
+        console.error('데이터베이스에 연결하는 중 오류 발생:', err);
+        return;
     }
     console.log('데이터베이스에 연결되었습니다');
-  });
+});
 
 app.get('/api/restaurants', (req, res) => {
     let sql = 'SELECT * FROM restaurant';
@@ -119,7 +119,7 @@ app.get('/api/restaurants/:id', (req, res) => {
             if (error) {
                 console.error('SQL 쿼리 실행 중 오류 발생:', error);
                 res.status(500).json({ error: '내부 서버 오류' });
-              } else {
+            } else {
                 console.log(results)
                 res.json(results);
                 //console.log('GET /api/restaurants/detail/:id is completed!');
@@ -136,7 +136,7 @@ app.get('/api/restaurants/:id/menu', (req, res) => {
             if (error) {
                 console.error('SQL 쿼리 실행 중 오류 발생:', error);
                 res.status(500).json({ error: '내부 서버 오류' });
-              } else {
+            } else {
                 console.log(results)
                 res.json(results);
                 //console.log('GET /api/restaurants/:id/menu is completed!');
@@ -145,45 +145,24 @@ app.get('/api/restaurants/:id/menu', (req, res) => {
     );
 });
 app.post('/api/restaurants/:id/edit', (req, res) => {
-    const restName = req.body.name;
-    const restCat = req.body.category1;
-    const restLoc = req.body.coarse_location;
+    const restaurantId = req.params.id;
+    console.log("restaurantId in edit - server.js", restaurantId);
+    const { ID, name, category1, category2, telnum, coarse_location, real_location,
+        operation_hour, breakingtime, update_date } = req.body;
+    const values = [name, category1, category2, telnum, coarse_location,
+        real_location, operation_hour, breakingtime, update_date, ID];
 
-    let sql = 'SELECT * FROM restaurant';
-    let conditions = [];
-    let params = [];
+    let sql = 'UPDATE restaurant SET name=?, category1=?, category2=?, telnum=?,coarse_location=?,real_location=?, operation_hour=?, breakingtime=?, update_date=? WHERE idrestaurant = ?';
 
-    if (restName.length) {
-        conditions.push('name IN (?)');
-        params.push(restName);
-    }
-    if (restCat.length) {
-        conditions.push('category1 IN (?)');
-        params.push(restCat);
-    }
-    if (restLoc.length) {
-        conditions.push('Coarse_location IN (?)');
-        params.push(restLoc);
-    }
-
-    if (conditions.length) {
-        sql += ' WHERE ' + conditions.join(' AND ');
-    }
-
-    console.log('sql:\n', sql);
-
-    connection.query(
-        sql, params,
-        (error, results, fields) => {
-            if (error) {
-                return res.status(500).send('Server Error');
-            } else {
-                console.log(results);
-                res.json(results);
-                console.log('GET /api/restaurant/search is completed!');
-            }
+    connection.query(sql, values, (error, results) => {
+        if (error) {
+            console.error('Error updating data:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        } else {
+            console.log('Data updated successfully:', results);
+            res.status(200).json({ message: 'Data updated successfully' });
         }
-    );
+    });
 });
 
 app.listen(port, () => {

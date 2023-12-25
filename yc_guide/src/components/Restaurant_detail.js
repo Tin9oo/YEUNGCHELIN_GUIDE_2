@@ -57,10 +57,12 @@ export default function RestaurantDetailPopup(props) {
   });
   const [editable, setEditable] = useState(false); //수정 가능 여부
 
+  const [saveButtonHit, setSaveButtonHit] =useState(1);
+
   useEffect(() => {
     RestInfo();
     MenuInfo();
-  }, [editButtonHit]);
+  }, [editButtonHit, saveButtonHit]);
 
   const RestInfo = () => {
     fetch(restaurantUrl)
@@ -96,8 +98,6 @@ export default function RestaurantDetailPopup(props) {
   };
 
   useEffect(() => {
-    // RestInfo();
-    // console.log("restInfo.idrestaurant: ", restInfo[0].idrestaurant);
     if (restInfo.length > 0 && restInfo[0].idrestaurant) {
       setEditingRestInfo({
         ID: restInfo[0].idrestaurant,
@@ -115,50 +115,55 @@ export default function RestaurantDetailPopup(props) {
       console.log("restInfo in here", restInfo[0]);
       console.log("editingRestInfo in here", editingRestInfo);
 
-      setName(editingRestInfo);
-      console.log("Restname", Restname);
-
-      setCategory1(editingRestInfo.category1);
-      setCategory1(editingRestInfo.category2);
-      setTelnum(editingRestInfo.telnum);
-      setCoarseLocation(editingRestInfo.coarse_location);
-      setRealLocation(editingRestInfo.real_location);
-      setOperationHour(editingRestInfo.operation_hour);
-      setBreakingTime(editingRestInfo.breakingtime);
+      setName(restInfo[0].name);
+      setCategory1(restInfo[0].category1);
+      setCategory2(restInfo[0].category2);
+      setTelnum(restInfo[0].telnum);
+      setCoarseLocation(restInfo[0].coarse_location);
+      setRealLocation(restInfo[0].real_location);
+      setOperationHour(restInfo[0].operation_hour);
+      setBreakingTime(restInfo[0].breakingtime);
     }
   }, [restInfo]);
 
   const handleEditable = () => {
     setEditable(true);
     setEditButtonHit(editButtonHit + 1);
-    console.log("editButtonHit:");
-    console.log(editButtonHit);
+    // console.log("editButtonHit:");
+    // console.log(editButtonHit);
   };
+
   const saveButton = () => {
     updateRestaurantInfo();
+    setSaveButtonHit(saveButtonHit+1);
+    // console.log("saveButtonHit", saveButtonHit);
     setEditable(false);
   };
 
+  useEffect(() => {
+    const now = new Date();
+    const formattedDate = now.toISOString().split('T')[0];
+    console.log("시간",now);
+    console.log("Restname when save Button hitted", Restname);
+    setEditingRestInfo((prevEditingRestInfo) => ({
+      ...prevEditingRestInfo,
+      name: Restname,
+      category1: Restcategory1,
+      category2: Restcategory2,
+      telnum: Resttelnum,
+      coarse_location: RestcoarseLocation,
+      real_location: RestrealLocation,
+      operation_hour: RestoperationHour,
+      breakingtime: RestbreakingTime,
+      //update_date: now.toISOString(),
+      update_date: formattedDate
+    }));
+    console.log("editingRestInfo that changed", editingRestInfo);
+  }, [Restname, Restcategory1, Restcategory2, Resttelnum, RestcoarseLocation, RestrealLocation, RestoperationHour, RestbreakingTime]);
+
   const updateRestaurantInfo = () => {
-    // const now = new Date();
-    // setEditingRestInfo({
-    //     name: Restname,
-    //     category1: Restcategory1,
-    //     category2: Restcategory2,
-    //     telnum: Resttelnum,
-    //     coarse_location: RestcoarseLocation,
-    //     real_location: RestrealLocation,
-    //     operation_hour: RestoperationHour,
-    //     breakingtime: RestbreakingTime,
-    //     update_date: now.toISOString()
-    // });
-
-    console.log(editingRestInfo);
-
-    console.log("Data updated successfully:");
-
     fetch(EditRestaurantUrl, {
-      method: "PUT",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
@@ -207,72 +212,72 @@ export default function RestaurantDetailPopup(props) {
             required
             id="standard-required"
             label="name"
-            value={restInfo[0].name}
-            onChange={(e) => setEditingRestInfo({ name: e.target.value })}
+            //value={restInfo[0].name}
+            value={Restname}
+            onChange={(e) => setName(e.target.value)}
             variant="standard"
           />
           <TextField
             required
             id="standard-required"
             label="category1"
-            value={restInfo[0].category1}
-            onChange={(e) => setEditingRestInfo({ category1: e.target.value })}
+            //value={restInfo[0].category1}
+            value={Restcategory1}
+            onChange={(e) => setCategory1(e.target.value )}
             variant="standard"
           />
           <TextField
             required
             id="standard-required"
             label="category2"
-            value={restInfo[0].category2}
-            onChange={(e) => setEditingRestInfo({ category2: e.target.value })}
+            //value={restInfo[0].category2}
+            value={Restcategory2}
+            onChange={(e) => setCategory2(e.target.value)}
             variant="standard"
           />
           <TextField
             required
             id="standard-required"
             label="telnum"
-            value={restInfo[0].telnum}
-            onChange={(e) => setEditingRestInfo({ telnum: e.target.value })}
+            //value={restInfo[0].telnum}
+            value={Resttelnum}
+            onChange={(e) => setTelnum(e.target.value)}
             variant="standard"
           />
           <TextField
             required
             id="standard-required"
             label="coarse_location"
-            value={restInfo[0].coarse_location}
-            onChange={(e) =>
-              setEditingRestInfo({ coarse_location: e.target.value })
-            }
+            //value={restInfo[0].coarse_location}
+            value={RestcoarseLocation}
+            onChange={(e) =>setCoarseLocation(e.target.value )}
             variant="standard"
           />
           <TextField
             required
             id="standard-required"
             label="real_location"
-            value={restInfo[0].real_location}
-            onChange={(e) =>
-              setEditingRestInfo({ real_location: e.target.value })
-            }
+            //value={restInfo[0].real_location}
+            value={RestrealLocation}
+            onChange={(e) =>setRealLocation(e.target.value )}
             variant="standard"
           />
           <TextField
             required
             id="standard-required"
             label="operation_hour"
-            value={restInfo[0].operation_hour}
-            onChange={(e) =>
-              setEditingRestInfo({ operation_hour: e.target.value })
-            }
+            //value={restInfo[0].operation_hour}
+            value={RestoperationHour}
+            onChange={(e) =>setOperationHour(e.target.value )}
             variant="standard"
           />
           <TextField
             required
             id="standard-required"
             label="breaking_time"
-            value={restInfo[0].breakingtime}
-            onChange={(e) =>
-              setEditingRestInfo({ breakingtime: e.target.value })
-            }
+            //value={restInfo[0].breakingtime}
+            value={RestbreakingTime}
+            onChange={(e) =>setBreakingTime(e.target.value )}
             variant="standard"
           />
 
